@@ -11,6 +11,20 @@
     </nav>
   </div>
   <div class="flex items-center gap-3">
+    <!-- Save status -->
+    @if (saveStatus() === 'saving') {
+      <span class="hidden md:flex items-center gap-1 text-xs text-secondary font-label">
+        <span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span> Salvando...
+      </span>
+    } @else if (saveStatus() === 'saved') {
+      <span class="hidden md:flex items-center gap-1 text-xs text-green-600 font-label">
+        <span class="material-symbols-outlined text-[16px]">check_circle</span> Salvo
+      </span>
+    } @else if (saveStatus() === 'error') {
+      <span class="hidden md:flex items-center gap-1 text-xs text-red-500 font-label">
+        <span class="material-symbols-outlined text-[16px]">error</span> Erro ao salvar
+      </span>
+    }
     <button (click)="changeTemplate()"
       class="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-all font-label">
       <span class="material-symbols-outlined text-[20px]">dashboard_customize</span>

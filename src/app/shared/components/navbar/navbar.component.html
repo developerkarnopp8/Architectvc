@@ -40,7 +40,8 @@
           Criar Conta
         </a>
       } @else {
-        <button
+        <span class="font-label text-sm text-secondary">Olá, {{ firstName() }}</span>
+        <button (click)="logout()"
           class="font-label font-semibold text-sm text-secondary hover:text-primary transition-colors px-4 py-2">
           Sair
         </button>

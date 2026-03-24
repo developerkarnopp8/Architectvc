@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -15,25 +16,25 @@ export const routes: Routes = [
     path: 'editor',
     loadComponent: () =>
       import('./features/editor/editor.component').then(m => m.EditorComponent),
-    // canActivate: [AuthGuard]  // Habilitado após implementar auth
+    canActivate: [authGuard],
   },
   {
     path: 'editor/:resumeId',
     loadComponent: () =>
       import('./features/editor/editor.component').then(m => m.EditorComponent),
-    // canActivate: [AuthGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'dashboard',
     loadComponent: () =>
       import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    // canActivate: [AuthGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'success/:resumeId',
     loadComponent: () =>
       import('./features/success/success.component').then(m => m.SuccessComponent),
-    // canActivate: [AuthGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'auth',

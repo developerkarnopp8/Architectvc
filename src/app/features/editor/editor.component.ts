@@ -1,4 +1,4 @@
-import { Component, inject, computed, OnInit } from '@angular/core';
+import { Component, inject, computed, OnInit, signal, effect } from '@angular/core';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
@@ -9,6 +9,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ResumeService } from '../../core/services/resume.service';
+import { ResumeApiService } from '../../core/services/resume-api.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { Language } from '../../core/models';
 import { CvPreviewComponent } from '../../shared/components/cv-templates/cv-preview/cv-preview.component';
 
@@ -28,12 +30,14 @@ interface SectionNav {
   styleUrl: './editor.component.scss',
 })
 export class EditorComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  private fb         = inject(FormBuilder);
+  private router     = inject(Router);
+  private route      = inject(ActivatedRoute);
   readonly resumeService = inject(ResumeService);
+  private resumeApi  = inject(ResumeApiService);
+  private auth       = inject(AuthService);
 
-  // === Dados do serviço (readonly, via computed) ===
+  // === Dados do serviço ===
   readonly personalInfo  = this.resumeService.personalInfo;
   readonly experiences   = this.resumeService.experiences;
   readonly educationList = this.resumeService.education;
@@ -48,6 +52,11 @@ export class EditorComponent implements OnInit {
       i < this.progress().completedSections
     )
   );
+
+  // === Save status ===
+  saveStatus = signal<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  private _saveTimer: ReturnType<typeof setTimeout> | null = null;
+  private _initialized = false;
 
   // === Navegação entre seções ===
   readonly sections: SectionNav[] = [
@@ -76,20 +85,50 @@ export class EditorComponent implements OnInit {
   // === Formulários ===
   personalForm!: FormGroup;
 
-  // Skill / Language inline inputs
   newSkillName = '';
   newLangName = '';
   newLangLevel: Language['level'] = 'intermediário';
   readonly languageLevels: Language['level'][] = ['básico','intermediário','avançado','fluente','nativo'];
 
+  constructor() {
+    // Auto-save: dispara 2s após cada mudança nos dados (somente se autenticado)
+    effect(() => {
+      const data = this.resumeData();
+      if (!this._initialized) return;
+      if (!this.auth.isLoggedIn()) return;
+
+      if (this._saveTimer) clearTimeout(this._saveTimer);
+      this.saveStatus.set('idle');
+      this._saveTimer = setTimeout(() => this._autoSave(data), 2000);
+    });
+  }
+
   // === Lifecycle ===
   ngOnInit(): void {
-    // If a templateId query param is provided, switch template (and reset data)
+    const routeResumeId = this.route.snapshot.paramMap.get('resumeId');
     const paramTemplateId = this.route.snapshot.queryParamMap.get('templateId');
-    if (paramTemplateId && paramTemplateId !== this.resumeService.templateId()) {
-      this.resumeService.setTemplate(paramTemplateId);
-    }
 
+    if (routeResumeId) {
+      // Editar currículo existente: carrega da API
+      this.resumeApi.get(routeResumeId).subscribe({
+        next: (resume) => {
+          this.resumeService.loadFromApiResume(resume);
+          this._buildForm();
+          this._initialized = true;
+        },
+        error: () => this.router.navigate(['/dashboard']),
+      });
+    } else {
+      // Novo currículo: aplica templateId se veio por query param
+      if (paramTemplateId && paramTemplateId !== this.resumeService.templateId()) {
+        this.resumeService.setTemplate(paramTemplateId);
+      }
+      this._buildForm();
+      this._initialized = true;
+    }
+  }
+
+  private _buildForm(): void {
     const p = this.personalInfo();
     this.personalForm = this.fb.group({
       fullName:  [p.fullName,  Validators.required],
@@ -104,10 +143,30 @@ export class EditorComponent implements OnInit {
       about:     [p.about,     Validators.required],
     });
 
-    // Sincroniza form → service em tempo real
     this.personalForm.valueChanges.subscribe(v =>
       this.resumeService.updatePersonalInfo(v)
     );
+  }
+
+  private _autoSave(data: typeof this.resumeData extends () => infer T ? T : never): void {
+    const resumeId = this.resumeService.currentResumeId();
+    this.saveStatus.set('saving');
+
+    if (resumeId) {
+      this.resumeApi.update(resumeId, { data, templateId: this.templateId() }).subscribe({
+        next: () => this.saveStatus.set('saved'),
+        error: () => this.saveStatus.set('error'),
+      });
+    } else {
+      this.resumeApi.create({ templateId: this.templateId(), data }).subscribe({
+        next: (resume) => {
+          this.resumeService.currentResumeId.set(resume.id);
+          this.router.navigate(['/editor', resume.id], { replaceUrl: true });
+          this.saveStatus.set('saved');
+        },
+        error: () => this.saveStatus.set('error'),
+      });
+    }
   }
 
   // === Navegação ===

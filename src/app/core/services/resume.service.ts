@@ -10,6 +10,7 @@ import {
   ResumeProgress,
 } from '../models';
 
+
 const STORAGE_KEY = 'architect_cv_resume';
 const TEMPLATE_KEY = 'architect_cv_template';
 
@@ -38,6 +39,9 @@ const defaultResumeData: ResumeData = {
 
 @Injectable({ providedIn: 'root' })
 export class ResumeService {
+  // ID do currículo salvo na API (null = não sincronizado)
+  readonly currentResumeId = signal<string | null>(null);
+
   // Template selecionado
   private _templateId = signal<string>(localStorage.getItem(TEMPLATE_KEY) ?? 'criativo-01');
   readonly templateId = this._templateId.asReadonly();
@@ -202,10 +206,19 @@ export class ResumeService {
     }));
   }
 
+  // === Carregar da API ===
+
+  loadFromApiResume(resume: Resume): void {
+    this._templateId.set(resume.templateId);
+    this._resumeData.set(resume.data);
+    this.currentResumeId.set(resume.id);
+  }
+
   // === Reset ===
 
   reset(): void {
     this._resumeData.set({ ...defaultResumeData, personalInfo: { ...defaultPersonalInfo } });
+    this.currentResumeId.set(null);
     localStorage.removeItem(STORAGE_KEY);
   }
 
