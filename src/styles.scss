@@ -1,0 +1,96 @@
+// === ARCHITECT CV — Global Styles ===
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Google Fonts import
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+// Material Symbols config
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+// === Glassmorphism (Design System Rule) ===
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+// === Editorial Shadow ===
+.editorial-shadow {
+  box-shadow: 0 20px 40px rgba(25, 28, 30, 0.06);
+}
+
+// === Hero Gradient (Primary CTA) ===
+.hero-gradient {
+  background: linear-gradient(135deg, #24389c 0%, #3f51b5 100%);
+}
+
+// === Scrollbar Styling ===
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f2f4f6;
+}
+::-webkit-scrollbar-thumb {
+  background: #c5c5d4;
+  border-radius: 9999px;
+}
+
+// === Reusable Component Classes (via @layer components) ===
+@layer components {
+  // Form field label
+  .field-label {
+    @apply block text-xs font-semibold text-secondary mb-2 px-1 font-label uppercase tracking-wider;
+  }
+
+  // Form field input / textarea / select
+  .field-input {
+    @apply w-full bg-surface-container-highest border-none rounded-xl px-4 py-3
+           focus:ring-2 focus:ring-primary/20 focus:bg-white
+           outline-none transition-all text-on-surface
+           placeholder:text-outline/50;
+  }
+
+  // Resume preview section title
+  .preview-section-title {
+    @apply text-sm font-bold text-primary uppercase tracking-[0.2em] mb-4
+           border-l-4 border-tertiary pl-3 font-label;
+  }
+
+  // Ring error (invalid form field)
+  .ring-error {
+    @apply ring-error/40;
+  }
+}
+
+// === Base Reset ===
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #f7f9fb;
+  color: #191c1e;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// === Selection ===
+::selection {
+  background-color: #68fadd;
+  color: #00201a;
+}
+
+// === Angular CDK overlay ===
+.cdk-overlay-container {
+  z-index: 9999;
+}

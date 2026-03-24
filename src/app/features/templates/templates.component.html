@@ -1,0 +1,92 @@
+<app-navbar />
+
+<main class="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
+
+  <!-- Header -->
+  <header class="mb-16">
+    <h1 class="font-headline font-extrabold text-4xl md:text-5xl lg:text-6xl text-on-surface tracking-tight mb-6 max-w-2xl">
+      Escolha o Estilo do Seu Sucesso
+    </h1>
+    <p class="text-secondary text-lg max-w-xl font-body">
+      Nossos templates são projetados por especialistas em recrutamento para garantir
+      que sua primeira impressão seja inesquecível.
+    </p>
+  </header>
+
+  <!-- Filter Bar -->
+  <div class="flex flex-wrap items-center gap-3 mb-12">
+    @for (filter of filters; track filter.value) {
+      <button
+        (click)="setFilter(filter.value)"
+        [class]="activeFilter() === filter.value
+          ? 'bg-primary text-on-primary shadow-md'
+          : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest'"
+        class="px-6 py-2 rounded-full font-label text-sm font-medium transition-all">
+        {{ filter.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Template Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    @for (template of filteredTemplates(); track template.id) {
+      <div class="group cursor-pointer" (click)="selectTemplate(template)">
+
+        <!-- Live Preview Thumbnail -->
+        <div class="rounded-xl overflow-hidden mb-6 editorial-shadow transition-transform duration-300 group-hover:-translate-y-2 relative bg-white"
+             style="aspect-ratio:595/842">
+          <!-- Scaled CV preview -->
+          <div class="absolute inset-0 pointer-events-none" style="overflow:hidden">
+            <app-cv-preview
+              [data]="mockData"
+              [templateId]="template.id"
+              [scale]="previewScale"
+            />
+          </div>
+
+          <!-- Hover overlay -->
+          <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300 flex items-center justify-center">
+            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-primary text-on-primary px-6 py-3 rounded-xl font-label font-bold text-sm shadow-xl">
+              Usar este template
+            </span>
+          </div>
+
+          <!-- Premium badge -->
+          @if (template.isPremium) {
+            <div class="absolute top-3 right-3 bg-tertiary text-on-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-label z-10">
+              Pro
+            </div>
+          }
+        </div>
+
+        <!-- Card Footer -->
+        <div class="flex justify-between items-end">
+          <div>
+            <span class="text-xs font-label uppercase tracking-widest text-primary font-bold mb-1 block">
+              {{ template.category | titlecase }}
+            </span>
+            <h3 class="font-headline font-bold text-xl text-on-surface">{{ template.name }}</h3>
+            <p class="text-sm text-secondary font-body mt-1">{{ template.description }}</p>
+          </div>
+          <button
+            (click)="selectTemplate(template); $event.stopPropagation()"
+            class="bg-tertiary text-on-tertiary px-5 py-2.5 rounded-xl font-label text-sm font-semibold hover:opacity-90 transition-all whitespace-nowrap ml-4">
+            Usar Template
+          </button>
+        </div>
+
+      </div>
+    }
+  </div>
+
+  <!-- Empty state -->
+  @if (filteredTemplates().length === 0) {
+    <div class="text-center py-24">
+      <span class="material-symbols-outlined text-6xl text-outline-variant mb-4 block">search_off</span>
+      <p class="text-secondary font-body">Nenhum template encontrado para este filtro.</p>
+    </div>
+  }
+
+</main>
+
+<app-footer />

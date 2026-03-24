@@ -1,0 +1,159 @@
+<app-navbar />
+
+<main class="pt-16">
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="relative overflow-hidden pt-20 pb-32 md:pt-32 md:pb-48">
+    <!-- Background glow blobs -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-tertiary-fixed opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-primary opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+      <!-- Left: Copy -->
+      <div class="lg:col-span-7 z-10">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-fixed text-xs font-bold tracking-widest uppercase font-label mb-6">
+          Editor Profissional v1.0
+        </span>
+
+        <h1 class="font-headline text-5xl md:text-7xl font-extrabold text-on-surface leading-[1.1] tracking-tight mb-8">
+          Construa um
+          <span class="text-primary"> Currículo</span>
+          que os Recrutadores Amam.
+        </h1>
+
+        <p class="text-secondary text-lg md:text-xl max-w-xl mb-10 leading-relaxed font-body">
+          Destaque-se na multidão com designs arquitetados para conversão.
+          Simples, rápido e otimizado para sistemas de recrutamento (ATS).
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a routerLink="/templates"
+             class="hero-gradient text-on-primary px-8 py-4 rounded-xl font-bold text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform flex items-center justify-center gap-2 font-label">
+            Criar Meu Currículo Agora
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+          <a routerLink="/templates"
+             class="bg-surface-container-high text-on-surface px-8 py-4 rounded-xl font-bold text-lg hover:bg-surface-container-highest transition-colors flex items-center justify-center font-label">
+            Ver Templates
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Floating resume mockup -->
+      <div class="lg:col-span-5 relative">
+        <div class="relative z-10 glass-card p-3 rounded-2xl shadow-glass rotate-2 border border-white/40 overflow-hidden bg-white"
+             style="aspect-ratio:595/842">
+          <!-- Live CV preview scaled to fill the card -->
+          <div class="absolute inset-0 pointer-events-none" style="overflow:hidden">
+            <app-cv-preview
+              [data]="mockData"
+              templateId="moderno-01"
+              [scale]="0.72"
+            />
+          </div>
+        </div>
+        <div class="absolute -top-10 -right-10 w-64 h-64 bg-tertiary-fixed opacity-20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-primary opacity-10 rounded-full blur-3xl"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== TRUSTED BY ===== -->
+  <section class="bg-surface-container-low py-12">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 text-center">
+      <p class="font-label text-xs tracking-widest uppercase text-on-surface-variant font-bold mb-8">
+        Utilizado por profissionais em empresas líderes
+      </p>
+      <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 hover:opacity-70 transition-all duration-500">
+        <span class="font-headline font-bold text-2xl tracking-tighter">TECHCORP</span>
+        <span class="font-headline font-bold text-2xl tracking-tighter">GLOBALSOFT</span>
+        <span class="font-headline font-bold text-2xl tracking-tighter">NEXUS.AI</span>
+        <span class="font-headline font-bold text-2xl tracking-tighter">CREATIVEHQ</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TEMPLATE GRID ===== -->
+  <section class="py-24 max-w-7xl mx-auto px-6 md:px-12">
+    <div class="mb-16">
+      <h2 class="font-headline text-4xl font-extrabold text-on-surface mb-4">Escolha sua Base</h2>
+      <p class="text-secondary max-w-2xl font-body">
+        Nossos templates são desenvolvidos por especialistas em RH para garantir
+        que sua experiência seja o foco principal.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      @for (t of showcaseTemplates; track t.id) {
+        <div class="group">
+          <div class="rounded-xl overflow-hidden mb-6 transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-2xl relative bg-white"
+               style="aspect-ratio:595/842">
+            <div class="absolute inset-0 pointer-events-none" style="overflow:hidden">
+              <app-cv-preview [data]="mockData" [templateId]="t.id" [scale]="0.605" />
+            </div>
+          </div>
+          <span class="text-xs font-label font-bold uppercase tracking-widest text-primary mb-1 block">
+            {{ t.category }}
+          </span>
+          <h3 class="font-headline text-xl font-bold mb-2">{{ t.name }}</h3>
+          <a routerLink="/templates"
+             class="text-primary font-bold text-sm flex items-center gap-2 group-hover:gap-4 transition-all font-label">
+            Selecionar Estilo <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="text-center mb-20">
+        <h2 class="font-headline text-4xl font-extrabold text-on-surface mb-4">
+          Seu Novo Emprego em 3 Passos
+        </h2>
+        <p class="text-secondary max-w-xl mx-auto font-body">
+          Um processo intuitivo que transforma sua trajetória profissional em um
+          documento de alto impacto em minutos.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+        @for (step of steps; track step.number) {
+          <div class="flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-card"
+                 [class]="step.colorClass">
+              <span class="material-symbols-outlined text-4xl">{{ step.icon }}</span>
+            </div>
+            <h4 class="font-headline text-xl font-bold mb-3">{{ step.number }}. {{ step.title }}</h4>
+            <p class="text-secondary text-sm font-body">{{ step.description }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA SECTION ===== -->
+  <section class="py-24">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="bg-primary rounded-3xl p-12 md:p-20 text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-container/20 to-transparent pointer-events-none"></div>
+        <h2 class="font-headline text-4xl md:text-5xl font-extrabold text-white mb-8 relative z-10">
+          Pronto para dar o próximo passo na sua carreira?
+        </h2>
+        <a routerLink="/templates"
+           class="inline-block bg-tertiary-fixed text-on-tertiary-fixed px-10 py-5 rounded-2xl font-bold text-xl shadow-2xl hover:scale-105 transition-transform relative z-10 font-label">
+          Criar Meu Currículo Agora
+        </a>
+        <div class="mt-8 text-white/60 font-medium relative z-10 font-body">
+          Mais de 50.000 currículos criados este mês.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<app-footer />
