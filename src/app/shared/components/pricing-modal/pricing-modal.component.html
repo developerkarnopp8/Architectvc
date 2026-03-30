@@ -1,0 +1,66 @@
+<!-- Backdrop -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+     (click)="close()">
+
+  <!-- Modal -->
+  <div class="relative bg-surface rounded-3xl shadow-2xl max-w-3xl w-full p-8 md:p-12"
+       (click)="$event.stopPropagation()">
+
+    <!-- Close -->
+    <button (click)="close()"
+            class="absolute top-5 right-5 text-secondary hover:text-on-surface transition-colors">
+      <span class="material-symbols-outlined text-2xl">close</span>
+    </button>
+
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <span class="material-symbols-outlined text-5xl text-tertiary mb-3 block">workspace_premium</span>
+      <h2 class="font-headline font-extrabold text-3xl text-on-surface mb-2">Desbloqueie todos os templates</h2>
+      <p class="text-secondary font-body">Escolha o plano que melhor se adapta a você</p>
+    </div>
+
+    <!-- Plans -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      @for (plan of plans(); track plan.id) {
+        <button
+          [disabled]="loading() !== null"
+          (click)="selectPlan(plan)"
+          class="relative flex flex-col items-center text-center rounded-2xl border-2 p-6 transition-all hover:-translate-y-1 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+          [class]="plan.badge
+            ? 'border-primary bg-primary/5 hover:bg-primary/10'
+            : 'border-outline-variant bg-surface-container hover:bg-surface-container-high'">
+
+          <!-- Badge -->
+          @if (plan.badge) {
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-label whitespace-nowrap">
+              {{ plan.badge }}
+            </span>
+          }
+
+          <span class="font-headline font-bold text-xl text-on-surface mb-1">{{ plan.name }}</span>
+
+          <div class="my-3">
+            <span class="font-headline font-extrabold text-3xl text-primary">{{ formatPrice(plan.price) }}</span>
+            <span class="text-secondary text-sm font-body ml-1">{{ intervalLabel(plan.interval) }}</span>
+          </div>
+
+          <p class="text-secondary text-sm font-body mb-5">{{ plan.description }}</p>
+
+          <span class="mt-auto w-full bg-primary text-on-primary py-2.5 rounded-xl font-label font-semibold text-sm flex items-center justify-center gap-2"
+                [class.opacity-50]="loading() !== null">
+            @if (loading() === plan.id) {
+              <span class="material-symbols-outlined text-base animate-spin">progress_activity</span>
+            }
+            Assinar agora
+          </span>
+        </button>
+      }
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-xs text-secondary font-body mt-6">
+      Pagamento seguro via Stripe · Cancele quando quiser (planos mensais/anuais)
+    </p>
+
+  </div>
+</div>

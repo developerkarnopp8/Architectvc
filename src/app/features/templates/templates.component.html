@@ -35,6 +35,7 @@
         <!-- Live Preview Thumbnail -->
         <div class="rounded-xl overflow-hidden mb-6 editorial-shadow transition-transform duration-300 group-hover:-translate-y-2 relative bg-white"
              style="aspect-ratio:595/842">
+
           <!-- Scaled CV preview -->
           <div class="absolute inset-0 pointer-events-none" style="overflow:hidden">
             <app-cv-preview
@@ -44,16 +45,26 @@
             />
           </div>
 
-          <!-- Hover overlay -->
-          <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300 flex items-center justify-center">
-            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-primary text-on-primary px-6 py-3 rounded-xl font-label font-bold text-sm shadow-xl">
-              Usar este template
-            </span>
-          </div>
+          <!-- Lock overlay (premium + não é PRO) -->
+          @if (template.isPremium && !isPro()) {
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2 z-10">
+              <span class="material-symbols-outlined text-white text-5xl">lock</span>
+              <span class="text-white font-label font-bold text-sm tracking-wide">Exclusivo PRO</span>
+            </div>
+          }
 
-          <!-- Premium badge -->
+          <!-- Hover overlay (só aparece se livre para usar) -->
+          @if (!template.isPremium || isPro()) {
+            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300 flex items-center justify-center">
+              <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-primary text-on-primary px-6 py-3 rounded-xl font-label font-bold text-sm shadow-xl">
+                Usar este template
+              </span>
+            </div>
+          }
+
+          <!-- Badge PRO -->
           @if (template.isPremium) {
-            <div class="absolute top-3 right-3 bg-tertiary text-on-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-label z-10">
+            <div class="absolute top-3 right-3 bg-tertiary text-on-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-label z-20">
               Pro
             </div>
           }
@@ -70,8 +81,11 @@
           </div>
           <button
             (click)="selectTemplate(template); $event.stopPropagation()"
-            class="bg-tertiary text-on-tertiary px-5 py-2.5 rounded-xl font-label text-sm font-semibold hover:opacity-90 transition-all whitespace-nowrap ml-4">
-            Usar Template
+            class="px-5 py-2.5 rounded-xl font-label text-sm font-semibold hover:opacity-90 transition-all whitespace-nowrap ml-4"
+            [class]="template.isPremium && !isPro()
+              ? 'bg-tertiary/20 text-tertiary border border-tertiary/40'
+              : 'bg-tertiary text-on-tertiary'">
+            {{ template.isPremium && !isPro() ? 'Ver Planos' : 'Usar Template' }}
           </button>
         </div>
 
@@ -90,3 +104,8 @@
 </main>
 
 <app-footer />
+
+<!-- Pricing Modal -->
+@if (showPricing()) {
+  <app-pricing-modal (closed)="showPricing.set(false)" />
+}
