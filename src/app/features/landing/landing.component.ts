@@ -40,8 +40,8 @@ export class LandingComponent {
   ];
 
   readonly showcaseTemplates = [
-    { id: 'moderno-02',     name: 'Moderno Geométrico', category: 'Moderno'     },
-    { id: 'executivo-01',   name: 'Executivo Profissional', category: 'Executivo' },
-    { id: 'criativo-02',    name: 'Criativo Dark',      category: 'Criativo'    },
+    { id: 'moderno-02',   name: 'Moderno Geométrico',    category: 'Moderno',   isPremium: true  },
+    { id: 'executivo-01', name: 'Executivo Profissional', category: 'Executivo', isPremium: true  },
+    { id: 'criativo-02',  name: 'Criativo Dark',          category: 'Criativo',  isPremium: true  },
   ];
 }

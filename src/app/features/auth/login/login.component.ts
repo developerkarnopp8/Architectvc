@@ -65,7 +65,13 @@ export class LoginComponent {
     this.error.set('');
 
     this.auth.login({ email: this.email, password: this.password }).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: () => {
+        if (this.auth.hasPendingResume()) {
+          this.router.navigate(['/editor']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      },
       error: (err) => {
         this.error.set(err?.error?.message ?? 'Erro ao entrar. Tente novamente.');
         this.loading.set(false);

@@ -51,6 +51,17 @@ export class AuthService {
     this._user.set(res.user);
   }
 
+  hasPendingResume(): boolean {
+    return !!localStorage.getItem('architect_cv_pending_resume');
+  }
+
+  consumePendingResume(): { templateId: string; data: unknown } | null {
+    const raw = localStorage.getItem('architect_cv_pending_resume');
+    if (!raw) return null;
+    localStorage.removeItem('architect_cv_pending_resume');
+    try { return JSON.parse(raw); } catch { return null; }
+  }
+
   private _loadUser(): User | null {
     try {
       const raw = localStorage.getItem(USER_KEY);

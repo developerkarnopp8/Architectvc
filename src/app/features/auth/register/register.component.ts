@@ -71,7 +71,13 @@ export class RegisterComponent {
     this.error.set('');
 
     this.auth.register({ name: this.name, email: this.email, password: this.password }).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: () => {
+        if (this.auth.hasPendingResume()) {
+          this.router.navigate(['/editor']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      },
       error: (err) => {
         this.error.set(err?.error?.message ?? 'Erro ao criar conta. Tente novamente.');
         this.loading.set(false);

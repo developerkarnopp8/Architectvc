@@ -94,3 +94,33 @@ html, body {
 .cdk-overlay-container {
   z-index: 9999;
 }
+
+// === Print: show only CV ===
+@media print {
+  .no-print { display: none !important; }
+
+  .print-only {
+    display: block !important;
+    width: 595px;
+    height: 842px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  body {
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+}
+
+// Hide print target when not printing
+.print-only {
+  display: none;
+}

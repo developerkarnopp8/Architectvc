@@ -17,8 +17,9 @@ export class PricingModalComponent implements OnInit {
   private authService    = inject(AuthService);
   private router         = inject(Router);
 
-  plans   = signal<Plan[]>([]);
-  loading = signal<PlanId | null>(null);
+  plans          = signal<Plan[]>([]);
+  loading        = signal<PlanId | null>(null);
+  showLoginPrompt = signal(false);
 
   ngOnInit() {
     this.paymentService.getPlans().subscribe(p => this.plans.set(p));
@@ -26,8 +27,7 @@ export class PricingModalComponent implements OnInit {
 
   selectPlan(plan: Plan) {
     if (!this.authService.isLoggedIn()) {
-      this.closed.emit();
-      this.router.navigate(['/register']);
+      this.showLoginPrompt.set(true);
       return;
     }
 
@@ -40,6 +40,16 @@ export class PricingModalComponent implements OnInit {
     });
   }
 
+  goToLogin() {
+    this.closed.emit();
+    this.router.navigate(['/login']);
+  }
+
+  goToRegister() {
+    this.closed.emit();
+    this.router.navigate(['/register']);
+  }
+
   close() {
     this.closed.emit();
   }
@@ -49,7 +59,7 @@ export class PricingModalComponent implements OnInit {
   }
 
   intervalLabel(interval: string): string {
-    const map: Record<string, string> = { month: '/mês', year: '/ano', once: 'único' };
+    const map: Record<string, string> = { month: '/mês', year: '/ano', once: '' };
     return map[interval] ?? '';
   }
 }

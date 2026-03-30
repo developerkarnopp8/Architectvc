@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 
-export type PlanId = 'monthly' | 'annual' | 'single';
+export type PlanId = 'monthly' | 'annual' | 'single' | 'test';
 
 export interface Plan {
   id: PlanId;

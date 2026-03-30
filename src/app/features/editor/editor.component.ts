@@ -55,8 +55,11 @@ export class EditorComponent implements OnInit {
 
   // === Save status ===
   saveStatus = signal<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  showAuthPrompt = signal(false);
   private _saveTimer: ReturnType<typeof setTimeout> | null = null;
   private _initialized = false;
+
+  static readonly PENDING_KEY = 'architect_cv_pending_resume';
 
   // === Navegação entre seções ===
   readonly sections: SectionNav[] = [
@@ -119,8 +122,12 @@ export class EditorComponent implements OnInit {
         error: () => this.router.navigate(['/dashboard']),
       });
     } else {
-      // Novo currículo: aplica templateId se veio por query param
-      if (paramTemplateId && paramTemplateId !== this.resumeService.templateId()) {
+      // Restaura currículo pendente (utilizador acabou de fazer login/register)
+      const pending = this.auth.consumePendingResume();
+      if (pending) {
+        this.resumeService.setTemplate(pending.templateId);
+        this.resumeService.loadFromApiResume({ templateId: pending.templateId, data: pending.data } as any);
+      } else if (paramTemplateId && paramTemplateId !== this.resumeService.templateId()) {
         this.resumeService.setTemplate(paramTemplateId);
       }
       this._buildForm();
@@ -173,8 +180,27 @@ export class EditorComponent implements OnInit {
   setSection(section: EditorSection): void { this.activeSection = section; }
 
   nextSection(): void {
-    if (!this.isLastSection)
-      this.activeSection = this.sections[this.currentSectionIndex + 1].id;
+    if (this.isLastSection) {
+      if (!this.auth.isLoggedIn()) {
+        localStorage.setItem(EditorComponent.PENDING_KEY, JSON.stringify({
+          templateId: this.templateId(),
+          data: this.resumeData(),
+        }));
+        this.showAuthPrompt.set(true);
+      } else {
+        this.router.navigate(['/success/preview']);
+      }
+      return;
+    }
+    this.activeSection = this.sections[this.currentSectionIndex + 1].id;
+  }
+
+  goToLoginFromEditor() {
+    this.router.navigate(['/login'], { queryParams: { returnUrl: '/editor' } });
+  }
+
+  goToRegisterFromEditor() {
+    this.router.navigate(['/register'], { queryParams: { returnUrl: '/editor' } });
   }
 
   prevSection(): void {

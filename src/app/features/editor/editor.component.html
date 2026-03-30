@@ -350,10 +350,10 @@
                 Próxima Seção <span class="material-symbols-outlined">arrow_forward</span>
               </button>
             } @else {
-              <a routerLink="/success/preview"
+              <button (click)="nextSection()"
                  class="flex items-center gap-2 px-8 py-3 rounded-xl bg-tertiary text-on-tertiary font-bold shadow-xl hover:-translate-y-0.5 transition-all font-label">
                 Finalizar <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">check_circle</span>
-              </a>
+              </button>
             }
           </div>
         </div>
@@ -403,3 +403,30 @@
   </section>
 
 </main>
+
+<!-- Auth prompt overlay -->
+@if (showAuthPrompt()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-surface rounded-3xl shadow-2xl max-w-md w-full p-8 text-center">
+      <span class="material-symbols-outlined text-5xl text-primary mb-4 block">save</span>
+      <h2 class="font-headline font-extrabold text-2xl text-on-surface mb-2">Os teus dados estão guardados!</h2>
+      <p class="text-secondary font-body mb-6">
+        Para não perderes o teu currículo, faz login ou cria uma conta gratuita. Os dados serão restaurados automaticamente.
+      </p>
+      <div class="flex flex-col gap-3">
+        <button (click)="goToRegisterFromEditor()"
+                class="w-full bg-primary text-on-primary py-3 rounded-xl font-label font-bold text-sm hover:opacity-90 transition-opacity">
+          Criar conta gratuita
+        </button>
+        <button (click)="goToLoginFromEditor()"
+                class="w-full border-2 border-primary text-primary py-3 rounded-xl font-label font-bold text-sm hover:bg-primary/5 transition-colors">
+          Já tenho conta — Entrar
+        </button>
+        <button (click)="showAuthPrompt.set(false)"
+                class="text-sm text-secondary font-body underline mt-1">
+          Continuar sem guardar
+        </button>
+      </div>
+    </div>
+  </div>
+}
