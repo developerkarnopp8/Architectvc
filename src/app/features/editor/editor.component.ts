@@ -258,6 +258,32 @@ export class EditorComponent implements OnInit {
   }
   onSkillKeydown(e: KeyboardEvent): void { if (e.key === 'Enter') this.addSkill(); }
 
+  // === Avatar ===
+  readonly AVATAR_TEMPLATES = new Set(['criativo-02', 'executivo-02', 'moderno-02']);
+
+  templateHasAvatar(): boolean {
+    return this.AVATAR_TEMPLATES.has(this.templateId());
+  }
+
+  onAvatarUpload(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert('A imagem deve ter no máximo 2MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const url = e.target?.result as string;
+      this.resumeService.updatePersonalInfo({ avatarUrl: url });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeAvatar(): void {
+    this.resumeService.updatePersonalInfo({ avatarUrl: '' });
+  }
+
   // === Idiomas ===
   addLanguage(): void {
     const name = this.newLangName.trim();

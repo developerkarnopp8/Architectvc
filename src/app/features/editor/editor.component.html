@@ -73,6 +73,36 @@
           <form [formGroup]="personalForm" class="space-y-6">
             <div class="grid grid-cols-2 gap-5">
 
+              <!-- Avatar upload (apenas templates com foto) -->
+              @if (templateHasAvatar()) {
+                <div class="col-span-2">
+                  <label class="field-label">Foto do Perfil</label>
+                  <div class="flex items-center gap-5">
+                    <div class="w-20 h-20 rounded-full bg-surface-container-highest flex-shrink-0 overflow-hidden flex items-center justify-center border-2 border-outline-variant/30">
+                      @if (personalInfo().avatarUrl) {
+                        <img [src]="personalInfo().avatarUrl" alt="Foto de perfil" class="w-full h-full object-cover" />
+                      } @else {
+                        <span class="material-symbols-outlined text-4xl text-outline">person</span>
+                      }
+                    </div>
+                    <div class="flex flex-col gap-2">
+                      <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-on-primary text-sm font-bold font-label hover:opacity-90 transition-opacity">
+                        <span class="material-symbols-outlined text-[18px]">upload</span>
+                        Enviar foto
+                        <input type="file" accept="image/*" class="hidden" (change)="onAvatarUpload($event)" />
+                      </label>
+                      @if (personalInfo().avatarUrl) {
+                        <button type="button" (click)="removeAvatar()"
+                          class="text-xs text-error font-semibold font-label hover:underline text-left">
+                          Remover foto
+                        </button>
+                      }
+                      <p class="text-xs text-secondary/60 font-body">JPG ou PNG, máx. 2MB</p>
+                    </div>
+                  </div>
+                </div>
+              }
+
               <div class="col-span-2">
                 <label class="field-label">Nome Completo *</label>
                 <input formControlName="fullName" type="text" placeholder="Ex: Gustavo Karnopp"
