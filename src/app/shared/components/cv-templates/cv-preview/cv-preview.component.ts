@@ -27,15 +27,32 @@ const TEMPLATE_COMPONENT_MAP: Record<string, Type<{ data: ResumeData }>> = {
   imports: [NgComponentOutlet],
   template: `
     @if (activeComponent) {
-      <div
-        style="width:595px;height:842px;transform-origin:top left;overflow:hidden"
-        [style.transform]="'scale(' + scale + ')'"
-      >
-        <ng-container
-          [ngComponentOutlet]="activeComponent"
-          [ngComponentOutletInputs]="{ data: data }"
-        />
-      </div>
+      @if (forPrint) {
+        <!-- Print mode: sem scaling, altura livre para múltiplas páginas -->
+        <div style="width:595px">
+          <ng-container
+            [ngComponentOutlet]="activeComponent"
+            [ngComponentOutletInputs]="{ data: data }"
+          />
+        </div>
+      } @else {
+        <!-- Preview mode: outer colapsa para o tamanho visual, inner escala -->
+        <div
+          [style.width.px]="scaledWidth"
+          [style.height.px]="scaledHeight"
+          style="overflow:hidden;flex-shrink:0;position:relative"
+        >
+          <div
+            style="width:595px;height:842px;transform-origin:top left;overflow:hidden"
+            [style.transform]="'scale(' + scale + ')'"
+          >
+            <ng-container
+              [ngComponentOutlet]="activeComponent"
+              [ngComponentOutletInputs]="{ data: data }"
+            />
+          </div>
+        </div>
+      }
     }
   `,
 })
@@ -43,6 +60,10 @@ export class CvPreviewComponent implements OnChanges {
   @Input() data!: ResumeData;
   @Input() templateId: string = 'criativo-01';
   @Input() scale: number = 1;
+  @Input() forPrint: boolean = false;
+
+  get scaledWidth()  { return Math.round(595 * this.scale); }
+  get scaledHeight() { return Math.round(842 * this.scale); }
 
   activeComponent?: Type<{ data: ResumeData }>;
 

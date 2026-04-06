@@ -158,14 +158,14 @@
                     <div>
                       <label class="field-label">Início</label>
                       <input type="text" [value]="exp.startDate"
-                        (input)="updateExp(exp.id, 'startDate', $any($event.target).value)"
-                        placeholder="MM/AAAA" class="field-input" />
+                        (input)="onExpDateInput($event, exp.id, 'startDate')"
+                        placeholder="MM/AAAA" class="field-input" maxlength="7" />
                     </div>
                     <div>
                       <label class="field-label">Fim</label>
                       <input type="text" [value]="exp.endDate ?? ''"
-                        (input)="updateExp(exp.id, 'endDate', $any($event.target).value)"
-                        placeholder="Atual" class="field-input" />
+                        (input)="onExpDateInput($event, exp.id, 'endDate')"
+                        placeholder="Atual" class="field-input" maxlength="7" />
                     </div>
                   </div>
                   <div>
@@ -221,14 +221,14 @@
                   <div>
                     <label class="field-label">Início</label>
                     <input type="text" [value]="edu.startDate"
-                      (input)="updateEdu(edu.id, 'startDate', $any($event.target).value)"
-                      placeholder="MM/AAAA" class="field-input" />
+                      (input)="onEduDateInput($event, edu.id, 'startDate')"
+                      placeholder="MM/AAAA" class="field-input" maxlength="7" />
                   </div>
                   <div>
                     <label class="field-label">Fim</label>
                     <input type="text" [value]="edu.endDate ?? ''"
-                      (input)="updateEdu(edu.id, 'endDate', $any($event.target).value)"
-                      placeholder="Em andamento" class="field-input" />
+                      (input)="onEduDateInput($event, edu.id, 'endDate')"
+                      placeholder="Em andamento" class="field-input" maxlength="7" />
                   </div>
                 </div>
               </div>

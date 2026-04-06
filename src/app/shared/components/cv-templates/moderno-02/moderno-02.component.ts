@@ -7,7 +7,7 @@ import { ResumeData } from '../../../../core/models';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div style="width:595px;min-height:842px;background:#fff;font-family:'Arial',sans-serif;box-sizing:border-box;color:#333;position:relative;overflow:hidden">
+    <div style="width:595px;min-height:842px;background:#fff;font-family:'Arial',sans-serif;box-sizing:border-box;color:#333;position:relative">
 
       <!-- Geometric accent top-right -->
       <div style="position:absolute;top:0;right:0;width:200px;height:200px;background:#E8E8E8;clip-path:polygon(100% 0, 0 0, 100% 100%);z-index:0"></div>
