@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ResumeApiService, ResumeListItem } from '../../core/services/resume-api.service';
+import { PaymentService } from '../../core/services/payment.service';
+import { AuthService } from '../../core/auth/auth.service';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -87,10 +90,18 @@ import { FormsModule } from '@angular/forms';
                 Atualizado {{ resume.updatedAt | date:'dd/MM/yyyy' }}
               </p>
               <div class="flex gap-3 mt-auto">
-                <a [routerLink]="['/editor', resume.id]"
-                   class="flex-1 text-center hero-gradient text-white py-2 rounded-xl font-bold font-label text-sm hover:opacity-90 transition-all">
-                  Editar
-                </a>
+                @if (canDownload(resume.templateId)) {
+                  <button (click)="download(resume.id)"
+                    class="flex-1 text-center bg-tertiary text-on-tertiary py-2 rounded-xl font-bold font-label text-sm hover:opacity-90 transition-all flex items-center justify-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">download</span>
+                    Baixar
+                  </button>
+                } @else {
+                  <a [routerLink]="['/editor', resume.id]"
+                     class="flex-1 text-center hero-gradient text-white py-2 rounded-xl font-bold font-label text-sm hover:opacity-90 transition-all">
+                    Editar
+                  </a>
+                }
                 <button (click)="remove(resume.id)"
                   class="px-4 py-2 rounded-xl font-label font-bold text-sm text-red-500 border border-red-200 hover:bg-red-50 transition-all">
                   <span class="material-symbols-outlined text-base leading-none">delete</span>
@@ -106,7 +117,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
-  private resumeApi = inject(ResumeApiService);
+  private resumeApi      = inject(ResumeApiService);
+  private paymentService = inject(PaymentService);
+  private authService    = inject(AuthService);
+  private router         = inject(Router);
 
   loading         = signal(true);
   resumes         = signal<ResumeListItem[]>([]);
@@ -117,6 +131,19 @@ export class DashboardComponent implements OnInit {
       next: (data) => { this.resumes.set(data); this.loading.set(false); },
       error: ()     => this.loading.set(false),
     });
+    if (this.authService.isLoggedIn()) {
+      this.paymentService.loadUnlockedTemplates();
+    }
+  }
+
+  canDownload(templateId: string): boolean {
+    const user = this.authService.user();
+    if (user?.plan === 'pro') return true;
+    return this.paymentService.unlockedTemplates().includes(templateId);
+  }
+
+  download(resumeId: string): void {
+    this.router.navigate(['/success', resumeId]);
   }
 
   remove(id: string): void {
