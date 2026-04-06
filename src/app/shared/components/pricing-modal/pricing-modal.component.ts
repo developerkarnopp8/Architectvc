@@ -1,4 +1,4 @@
-import { Component, output, inject, signal, OnInit } from '@angular/core';
+import { Component, output, input, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaymentService, Plan, PlanId } from '../../../core/services/payment.service';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -13,12 +13,15 @@ import { Router } from '@angular/router';
 export class PricingModalComponent implements OnInit {
   closed = output<void>();
 
+  // templateId passado pelo pai quando o plano único é necessário
+  templateId = input<string | null>(null);
+
   private paymentService = inject(PaymentService);
   private authService    = inject(AuthService);
   private router         = inject(Router);
 
-  plans          = signal<Plan[]>([]);
-  loading        = signal<PlanId | null>(null);
+  plans           = signal<Plan[]>([]);
+  loading         = signal<PlanId | null>(null);
   showLoginPrompt = signal(false);
 
   ngOnInit() {
@@ -32,7 +35,9 @@ export class PricingModalComponent implements OnInit {
     }
 
     this.loading.set(plan.id);
-    this.paymentService.createCheckout(plan.id).subscribe({
+    const tid = plan.id === 'single' ? (this.templateId() ?? undefined) : undefined;
+
+    this.paymentService.createCheckout(plan.id, tid).subscribe({
       next: ({ url }) => {
         if (url) window.location.href = url;
       },

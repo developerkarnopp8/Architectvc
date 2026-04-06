@@ -36,6 +36,13 @@ export class AuthService {
     );
   }
 
+  refreshUser(): void {
+    this.api.get<User>('/auth/me').subscribe(user => {
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      this._user.set(user);
+    });
+  }
+
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
