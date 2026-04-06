@@ -132,6 +132,11 @@ export class EditorComponent implements OnInit {
       }
       this._buildForm();
       this._initialized = true;
+
+      // Salva imediatamente ao entrar no editor (garante que o CV fica no histórico)
+      if (this.auth.isLoggedIn()) {
+        this._autoSave(this.resumeData());
+      }
     }
   }
 
