@@ -36,7 +36,10 @@ export class PricingModalComponent implements OnInit {
       next: ({ url }) => {
         if (url) window.location.href = url;
       },
-      error: () => this.loading.set(null),
+      error: (err) => {
+        this.loading.set(null);
+        if (err.status === 401) this.showLoginPrompt.set(true);
+      },
     });
   }
 
