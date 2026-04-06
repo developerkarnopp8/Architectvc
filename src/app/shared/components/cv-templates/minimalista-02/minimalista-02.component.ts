@@ -44,6 +44,12 @@ import { ResumeData } from '../../../../core/models';
               @if (data.personalInfo.portfolio) {
                 <span>🌐 {{ data.personalInfo.portfolio }}</span>
               }
+              @if (data.personalInfo.linkedIn) {
+                <span style="word-break:break-all">🔗 {{ data.personalInfo.linkedIn }}</span>
+              }
+              @if (data.personalInfo.github) {
+                <span style="word-break:break-all">💻 {{ data.personalInfo.github }}</span>
+              }
             </div>
           </div>
 
@@ -99,6 +105,9 @@ import { ResumeData } from '../../../../core/models';
                       <span style="font-size:10px;font-weight:700;color:#555">{{ edu.startDate }}{{ edu.endDate ? ' – ' + edu.endDate : '' }}</span>
                       <span style="font-size:10px;color:#777">• {{ edu.institution }}</span>
                     </div>
+                    @if (edu.description) {
+                      <p style="font-size:10px;color:#777;margin:2px 0 0;font-style:italic;line-height:1.5">{{ edu.description }}</p>
+                    }
                   </div>
                 }
               </div>
@@ -117,8 +126,13 @@ import { ResumeData } from '../../../../core/models';
                       <span style="font-size:10px;color:#777">• {{ exp.jobTitle }}</span>
                     </div>
                     @if (exp.description) {
+                      <p style="font-size:10px;color:#555;line-height:1.6;margin:3px 0 0">{{ exp.description }}</p>
+                    }
+                    @if (exp.bullets && exp.bullets.length > 0) {
                       <ul style="margin:4px 0 0;padding-left:14px">
-                        <li style="font-size:10px;color:#555;line-height:1.6">{{ exp.description }}</li>
+                        @for (bullet of exp.bullets; track bullet) {
+                          <li style="font-size:10px;color:#555;line-height:1.6">{{ bullet }}</li>
+                        }
                       </ul>
                     }
                   </div>
