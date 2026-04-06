@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
@@ -50,6 +50,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 export class LoginComponent {
   private auth   = inject(AuthService);
   private router = inject(Router);
+  private route  = inject(ActivatedRoute);
 
   email    = '';
   password = '';
@@ -66,8 +67,11 @@ export class LoginComponent {
 
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
         if (this.auth.hasPendingResume()) {
           this.router.navigate(['/editor']);
+        } else if (returnUrl) {
+          this.router.navigateByUrl(returnUrl);
         } else {
           this.router.navigate(['/dashboard']);
         }

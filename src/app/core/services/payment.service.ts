@@ -30,8 +30,9 @@ export class PaymentService {
   }
 
   loadUnlockedTemplates(): void {
-    this.api.get<string[]>('/payments/unlocked-templates').subscribe(ids => {
-      this.unlockedTemplates.set(ids);
+    this.api.get<string[]>('/payments/unlocked-templates').subscribe({
+      next: (ids) => this.unlockedTemplates.set(ids),
+      error: () => this.unlockedTemplates.set([]), // mantém lista vazia em caso de falha
     });
   }
 

@@ -193,7 +193,12 @@ export class EditorComponent implements OnInit {
         }));
         this.showAuthPrompt.set(true);
       } else {
-        this.router.navigate(['/success/preview']);
+        const resumeId = this.resumeService.currentResumeId();
+        if (resumeId) {
+          this.router.navigate(['/success', resumeId]);
+        } else {
+          this.router.navigate(['/success']);
+        }
       }
       return;
     }
@@ -230,6 +235,27 @@ export class EditorComponent implements OnInit {
 
   removeExp(id: string): void { this.resumeService.removeExperience(id); }
   addExp(): void             { this.resumeService.addExperience(); }
+
+  addBullet(expId: string): void {
+    const exp = this.experiences().find(e => e.id === expId);
+    if (!exp) return;
+    this.resumeService.updateExperience(expId, { bullets: [...exp.bullets, ''] });
+  }
+
+  updateBullet(expId: string, index: number, value: string): void {
+    const exp = this.experiences().find(e => e.id === expId);
+    if (!exp) return;
+    const bullets = [...exp.bullets];
+    bullets[index] = value;
+    this.resumeService.updateExperience(expId, { bullets });
+  }
+
+  removeBullet(expId: string, index: number): void {
+    const exp = this.experiences().find(e => e.id === expId);
+    if (!exp) return;
+    const bullets = exp.bullets.filter((_, i) => i !== index);
+    this.resumeService.updateExperience(expId, { bullets });
+  }
 
   // === Educação ===
   updateEdu(id: string, field: string, value: string): void {

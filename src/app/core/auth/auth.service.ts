@@ -37,9 +37,15 @@ export class AuthService {
   }
 
   refreshUser(): void {
-    this.api.get<User>('/auth/me').subscribe(user => {
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-      this._user.set(user);
+    this.api.get<User>('/auth/me').subscribe({
+      next: (user) => {
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
+        this._user.set(user);
+      },
+      error: () => {
+        // Token expirado ou inválido — faz logout silencioso
+        this.logout();
+      },
     });
   }
 
