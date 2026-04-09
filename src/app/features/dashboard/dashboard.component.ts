@@ -4,13 +4,44 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ResumeApiService, ResumeListItem } from '../../core/services/resume-api.service';
+import { PaymentService } from '../../core/services/payment.service';
+import { AuthService } from '../../core/auth/auth.service';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, CommonModule, NavbarComponent, FooterComponent],
+  imports: [RouterLink, CommonModule, NavbarComponent, FooterComponent, FormsModule],
   template: `
     <app-navbar />
+
+    <!-- Confirm delete modal -->
+    @if (confirmDeleteId()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" (click)="cancelDelete()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full z-10">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="bg-red-100 p-3 rounded-xl">
+              <span class="material-symbols-outlined text-red-500" style="font-variation-settings:'FILL' 1;">warning</span>
+            </div>
+            <h3 class="font-headline text-lg font-bold text-on-surface">Excluir currículo?</h3>
+          </div>
+          <p class="text-secondary font-body text-sm mb-6">Esta ação é permanente e não pode ser desfeita. Tem certeza?</p>
+          <div class="flex gap-3">
+            <button (click)="cancelDelete()"
+              class="flex-1 py-3 rounded-xl font-bold font-label bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-all">
+              Cancelar
+            </button>
+            <button (click)="confirmDelete()"
+              class="flex-1 py-3 rounded-xl font-bold font-label bg-red-500 text-white hover:bg-red-600 transition-all">
+              Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
     <main class="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
       <header class="mb-12 flex justify-between items-end">
         <div>
@@ -59,10 +90,18 @@ import { ResumeApiService, ResumeListItem } from '../../core/services/resume-api
                 Atualizado {{ resume.updatedAt | date:'dd/MM/yyyy' }}
               </p>
               <div class="flex gap-3 mt-auto">
-                <a [routerLink]="['/editor', resume.id]"
-                   class="flex-1 text-center hero-gradient text-white py-2 rounded-xl font-bold font-label text-sm hover:opacity-90 transition-all">
-                  Editar
-                </a>
+                @if (canDownload(resume.templateId)) {
+                  <button (click)="download(resume.id)"
+                    class="flex-1 text-center bg-tertiary text-on-tertiary py-2 rounded-xl font-bold font-label text-sm hover:opacity-90 transition-all flex items-center justify-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">download</span>
+                    Baixar
+                  </button>
+                } @else {
+                  <a [routerLink]="['/editor', resume.id]"
+                     class="flex-1 text-center hero-gradient text-white py-2 rounded-xl font-bold font-label text-sm hover:opacity-90 transition-all">
+                    Editar
+                  </a>
+                }
                 <button (click)="remove(resume.id)"
                   class="px-4 py-2 rounded-xl font-label font-bold text-sm text-red-500 border border-red-200 hover:bg-red-50 transition-all">
                   <span class="material-symbols-outlined text-base leading-none">delete</span>
@@ -78,21 +117,50 @@ import { ResumeApiService, ResumeListItem } from '../../core/services/resume-api
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
-  private resumeApi = inject(ResumeApiService);
+  private resumeApi      = inject(ResumeApiService);
+  private paymentService = inject(PaymentService);
+  private authService    = inject(AuthService);
+  private router         = inject(Router);
 
-  loading = signal(true);
-  resumes = signal<ResumeListItem[]>([]);
+  loading         = signal(true);
+  resumes         = signal<ResumeListItem[]>([]);
+  confirmDeleteId = signal<string | null>(null);
 
   ngOnInit(): void {
     this.resumeApi.list().subscribe({
       next: (data) => { this.resumes.set(data); this.loading.set(false); },
       error: ()     => this.loading.set(false),
     });
+    if (this.authService.isLoggedIn()) {
+      this.paymentService.loadUnlockedTemplates();
+    }
+  }
+
+  canDownload(templateId: string): boolean {
+    const user = this.authService.user();
+    if (user?.plan === 'pro') return true;
+    return this.paymentService.unlockedTemplates().includes(templateId);
+  }
+
+  download(resumeId: string): void {
+    this.router.navigate(['/success', resumeId]);
   }
 
   remove(id: string): void {
-    this.resumeApi.remove(id).subscribe(() =>
-      this.resumes.update(list => list.filter(r => r.id !== id))
-    );
+    this.confirmDeleteId.set(id);
+  }
+
+  cancelDelete(): void {
+    this.confirmDeleteId.set(null);
+  }
+
+  confirmDelete(): void {
+    const id = this.confirmDeleteId();
+    if (!id) return;
+    this.confirmDeleteId.set(null);
+    this.resumeApi.remove(id).subscribe({
+      next: () => this.resumes.update(list => list.filter(r => r.id !== id)),
+      error: () => alert('Erro ao excluir. Tente novamente.'),
+    });
   }
 }

@@ -22,7 +22,7 @@ import { ResumeData } from '../../../../core/models';
       <hr style="border:none;border-top:2px solid #111;margin:16px 0">
 
       <!-- Contact row -->
-      <div style="display:flex;gap:32px;margin-bottom:6px;align-items:center">
+      <div style="display:flex;gap:24px;margin-bottom:6px;align-items:center;flex-wrap:wrap">
         <span style="display:flex;align-items:center;gap:6px;font-size:12px">
           <span style="font-size:16px">📞</span>{{ data.personalInfo.phone || '(12) 3456-7890' }}
         </span>
@@ -31,6 +31,15 @@ import { ResumeData } from '../../../../core/models';
         </span>
         @if (data.personalInfo.city) {
           <span style="font-size:12px">📍 {{ data.personalInfo.city }}{{ data.personalInfo.state ? ', ' + data.personalInfo.state : '' }}</span>
+        }
+        @if (data.personalInfo.linkedIn) {
+          <span style="font-size:12px">🔗 {{ data.personalInfo.linkedIn }}</span>
+        }
+        @if (data.personalInfo.github) {
+          <span style="font-size:12px">💻 {{ data.personalInfo.github }}</span>
+        }
+        @if (data.personalInfo.portfolio) {
+          <span style="font-size:12px">🌐 {{ data.personalInfo.portfolio }}</span>
         }
       </div>
 
@@ -57,6 +66,9 @@ import { ResumeData } from '../../../../core/models';
                 <div>
                   <p style="font-size:11px;font-weight:700;text-transform:uppercase;margin:0;letter-spacing:0.5px">{{ edu.institution }}</p>
                   <p style="font-size:11px;margin:2px 0 0;color:#444">{{ edu.degree }}</p>
+                  @if (edu.description) {
+                    <p style="font-size:10px;margin:3px 0 0;color:#666;line-height:1.5;font-style:italic">{{ edu.description }}</p>
+                  }
                 </div>
               </div>
             }
@@ -79,6 +91,13 @@ import { ResumeData } from '../../../../core/models';
                   <p style="font-size:11px;margin:2px 0;color:#444;font-style:italic">{{ exp.jobTitle }}</p>
                   @if (exp.description) {
                     <p style="font-size:10px;margin:4px 0 0;color:#555;line-height:1.6">{{ exp.description }}</p>
+                  }
+                  @if (exp.bullets && exp.bullets.length > 0) {
+                    <ul style="margin:4px 0 0;padding-left:14px">
+                      @for (bullet of exp.bullets; track bullet) {
+                        <li style="font-size:10px;color:#555;line-height:1.6">{{ bullet }}</li>
+                      }
+                    </ul>
                   }
                 </div>
               </div>

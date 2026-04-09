@@ -1,8 +1,11 @@
-import { Component, output, inject, signal, OnInit } from '@angular/core';
+import { Component, output, input, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaymentService, Plan, PlanId } from '../../../core/services/payment.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ResumeService } from '../../../core/services/resume.service';
 import { Router } from '@angular/router';
+
+export const PENDING_DOWNLOAD_RESUME_KEY = 'architect_cv_pending_download_resume';
 
 @Component({
   selector: 'app-pricing-modal',
@@ -13,12 +16,16 @@ import { Router } from '@angular/router';
 export class PricingModalComponent implements OnInit {
   closed = output<void>();
 
+  // templateId passado pelo pai quando o plano único é necessário
+  templateId = input<string | null>(null);
+
   private paymentService = inject(PaymentService);
   private authService    = inject(AuthService);
+  private resumeService  = inject(ResumeService);
   private router         = inject(Router);
 
-  plans          = signal<Plan[]>([]);
-  loading        = signal<PlanId | null>(null);
+  plans           = signal<Plan[]>([]);
+  loading         = signal<PlanId | null>(null);
   showLoginPrompt = signal(false);
 
   ngOnInit() {
@@ -32,11 +39,22 @@ export class PricingModalComponent implements OnInit {
     }
 
     this.loading.set(plan.id);
-    this.paymentService.createCheckout(plan.id).subscribe({
+    const tid = plan.id === 'single' ? (this.templateId() ?? undefined) : undefined;
+
+    // Salva o resumeId atual para redirecionar de volta após o pagamento
+    const resumeId = this.resumeService.currentResumeId();
+    if (resumeId) {
+      localStorage.setItem(PENDING_DOWNLOAD_RESUME_KEY, resumeId);
+    }
+
+    this.paymentService.createCheckout(plan.id, tid).subscribe({
       next: ({ url }) => {
         if (url) window.location.href = url;
       },
-      error: () => this.loading.set(null),
+      error: () => {
+        localStorage.removeItem(PENDING_DOWNLOAD_RESUME_KEY);
+        this.loading.set(null);
+      },
     });
   }
 

@@ -132,6 +132,11 @@ export class EditorComponent implements OnInit {
       }
       this._buildForm();
       this._initialized = true;
+
+      // Salva imediatamente ao entrar no editor (garante que o CV fica no histórico)
+      if (this.auth.isLoggedIn()) {
+        this._autoSave(this.resumeData());
+      }
     }
   }
 
@@ -188,7 +193,12 @@ export class EditorComponent implements OnInit {
         }));
         this.showAuthPrompt.set(true);
       } else {
-        this.router.navigate(['/success/preview']);
+        const resumeId = this.resumeService.currentResumeId();
+        if (resumeId) {
+          this.router.navigate(['/success', resumeId]);
+        } else {
+          this.router.navigate(['/success']);
+        }
       }
       return;
     }
@@ -217,12 +227,51 @@ export class EditorComponent implements OnInit {
     this.resumeService.updateExperience(id, { [field]: value } as any);
   }
 
+  onExpDateInput(event: Event, id: string, field: string): void {
+    const input = event.target as HTMLInputElement;
+    input.value = this._applyDateMask(input.value);
+    this.resumeService.updateExperience(id, { [field]: input.value } as any);
+  }
+
   removeExp(id: string): void { this.resumeService.removeExperience(id); }
   addExp(): void             { this.resumeService.addExperience(); }
+
+  addBullet(expId: string): void {
+    const exp = this.experiences().find(e => e.id === expId);
+    if (!exp) return;
+    this.resumeService.updateExperience(expId, { bullets: [...exp.bullets, ''] });
+  }
+
+  updateBullet(expId: string, index: number, value: string): void {
+    const exp = this.experiences().find(e => e.id === expId);
+    if (!exp) return;
+    const bullets = [...exp.bullets];
+    bullets[index] = value;
+    this.resumeService.updateExperience(expId, { bullets });
+  }
+
+  removeBullet(expId: string, index: number): void {
+    const exp = this.experiences().find(e => e.id === expId);
+    if (!exp) return;
+    const bullets = exp.bullets.filter((_, i) => i !== index);
+    this.resumeService.updateExperience(expId, { bullets });
+  }
 
   // === Educação ===
   updateEdu(id: string, field: string, value: string): void {
     this.resumeService.updateEducation(id, { [field]: value } as any);
+  }
+
+  onEduDateInput(event: Event, id: string, field: string): void {
+    const input = event.target as HTMLInputElement;
+    input.value = this._applyDateMask(input.value);
+    this.resumeService.updateEducation(id, { [field]: input.value } as any);
+  }
+
+  private _applyDateMask(raw: string): string {
+    const digits = raw.replace(/\D/g, '').slice(0, 6);
+    if (digits.length <= 2) return digits;
+    return digits.slice(0, 2) + '/' + digits.slice(2);
   }
 
   removeEdu(id: string): void { this.resumeService.removeEducation(id); }
@@ -234,6 +283,32 @@ export class EditorComponent implements OnInit {
     if (name) { this.resumeService.addSkill(name); this.newSkillName = ''; }
   }
   onSkillKeydown(e: KeyboardEvent): void { if (e.key === 'Enter') this.addSkill(); }
+
+  // === Avatar ===
+  readonly AVATAR_TEMPLATES = new Set(['criativo-02', 'executivo-02', 'moderno-02']);
+
+  templateHasAvatar(): boolean {
+    return this.AVATAR_TEMPLATES.has(this.templateId());
+  }
+
+  onAvatarUpload(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert('A imagem deve ter no máximo 2MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const url = e.target?.result as string;
+      this.resumeService.updatePersonalInfo({ avatarUrl: url });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeAvatar(): void {
+    this.resumeService.updatePersonalInfo({ avatarUrl: '' });
+  }
 
   // === Idiomas ===
   addLanguage(): void {

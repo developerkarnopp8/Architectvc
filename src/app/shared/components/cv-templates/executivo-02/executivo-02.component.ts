@@ -35,8 +35,9 @@ import { ResumeData } from '../../../../core/models';
         <div style="text-align:right;font-size:10px;color:#555;line-height:1.8">
           @if (data.personalInfo.phone) { <p style="margin:0">{{ data.personalInfo.phone }}</p> }
           @if (data.personalInfo.email) { <p style="margin:0">{{ data.personalInfo.email }}</p> }
-          @if (data.personalInfo.portfolio) { <p style="margin:0">{{ data.personalInfo.portfolio }}</p> }
-          @if (data.personalInfo.linkedIn) { <p style="margin:0">{{ data.personalInfo.linkedIn }}</p> }
+          @if (data.personalInfo.portfolio) { <p style="margin:0">🌐 {{ data.personalInfo.portfolio }}</p> }
+          @if (data.personalInfo.linkedIn) { <p style="margin:0">🔗 {{ data.personalInfo.linkedIn }}</p> }
+          @if (data.personalInfo.github) { <p style="margin:0">💻 {{ data.personalInfo.github }}</p> }
         </div>
       </div>
 
@@ -64,6 +65,13 @@ import { ResumeData } from '../../../../core/models';
                   </p>
                   @if (exp.description) {
                     <p style="font-size:10px;margin:3px 0 0;color:#555;line-height:1.5">{{ exp.description }}</p>
+                  }
+                  @if (exp.bullets && exp.bullets.length > 0) {
+                    <ul style="margin:4px 0 0;padding-left:14px">
+                      @for (bullet of exp.bullets; track bullet) {
+                        <li style="font-size:10px;color:#555;line-height:1.6">{{ bullet }}</li>
+                      }
+                    </ul>
                   }
                 </div>
               }
@@ -93,6 +101,9 @@ import { ResumeData } from '../../../../core/models';
                   <p style="font-size:10px;font-weight:700;margin:0">{{ edu.institution }}</p>
                   <p style="font-size:10px;margin:1px 0">{{ edu.degree }}</p>
                   <p style="font-size:10px;color:#666;margin:1px 0">{{ edu.startDate }}{{ edu.endDate ? ' – ' + edu.endDate : '' }}</p>
+                  @if (edu.description) {
+                    <p style="font-size:10px;color:#777;margin:2px 0 0;font-style:italic;line-height:1.5">{{ edu.description }}</p>
+                  }
                 </div>
               }
             </div>

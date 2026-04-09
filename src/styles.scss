@@ -97,25 +97,49 @@ html, body {
 
 // === Print: show only CV ===
 @media print {
+  // Force background colors, gradients and images to print
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   .no-print { display: none !important; }
 
-  .print-only {
-    display: block !important;
-    width: 595px;
-    height: 842px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+  // Scale 595px template to fill A4 (794px at 96dpi = 210mm)
+  // zoom affects layout flow, so multi-page breaks work correctly
+  html {
+    zoom: 1.3340 !important;
   }
 
   body {
-    background: white;
-    margin: 0;
-    padding: 0;
+    width: 595px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .print-only {
+    display: block !important;
+    width: 595px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  // Avoid breaking paragraphs and list items mid-page
+  p, li {
+    orphans: 3;
+    widows: 3;
   }
 
   @page {
     size: A4;
+    margin: 12mm 0;
+  }
+
+  @page :first {
     margin: 0;
   }
 }

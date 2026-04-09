@@ -46,6 +46,13 @@ import { ResumeData } from '../../../../core/models';
                     @if (exp.description) {
                       <p style="font-size:10px;line-height:1.6;margin:0;color:#555;font-family:'Arial',sans-serif">{{ exp.description }}</p>
                     }
+                    @if (exp.bullets && exp.bullets.length > 0) {
+                      <ul style="margin:4px 0 0;padding-left:14px">
+                        @for (bullet of exp.bullets; track bullet) {
+                          <li style="font-size:10px;color:#555;line-height:1.6;font-family:'Arial',sans-serif">{{ bullet }}</li>
+                        }
+                      </ul>
+                    }
                   </div>
                 }
               </div>
@@ -65,6 +72,9 @@ import { ResumeData } from '../../../../core/models';
                     <p style="font-size:10px;color:#888;margin:1px 0;font-family:'Arial',sans-serif">
                       {{ edu.startDate }}{{ edu.endDate ? ' – ' + edu.endDate : '' }}
                     </p>
+                    @if (edu.description) {
+                      <p style="font-size:10px;color:#777;margin:2px 0 0;font-style:italic;line-height:1.5;font-family:'Arial',sans-serif">{{ edu.description }}</p>
+                    }
                   </div>
                 }
               </div>
@@ -89,6 +99,15 @@ import { ResumeData } from '../../../../core/models';
               }
               @if (data.personalInfo.city) {
                 <div style="display:flex;gap:5px"><span>📍</span>{{ data.personalInfo.city }}{{ data.personalInfo.state ? ', ' + data.personalInfo.state : '' }}</div>
+              }
+              @if (data.personalInfo.linkedIn) {
+                <div style="display:flex;gap:5px"><span>🔗</span><span style="word-break:break-all">{{ data.personalInfo.linkedIn }}</span></div>
+              }
+              @if (data.personalInfo.github) {
+                <div style="display:flex;gap:5px"><span>💻</span><span style="word-break:break-all">{{ data.personalInfo.github }}</span></div>
+              }
+              @if (data.personalInfo.portfolio) {
+                <div style="display:flex;gap:5px"><span>🌐</span><span style="word-break:break-all">{{ data.personalInfo.portfolio }}</span></div>
               }
             </div>
           </div>

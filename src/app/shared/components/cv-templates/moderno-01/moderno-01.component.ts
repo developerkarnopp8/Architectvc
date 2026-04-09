@@ -34,6 +34,12 @@ import { ResumeData } from '../../../../core/models';
           @if (data.personalInfo.linkedIn) {
             <span style="display:flex;align-items:center;gap:4px">{{ data.personalInfo.linkedIn }} <span style="color:#C62A72">🔗</span></span>
           }
+          @if (data.personalInfo.github) {
+            <span style="display:flex;align-items:center;gap:4px">{{ data.personalInfo.github }} <span style="color:#C62A72">💻</span></span>
+          }
+          @if (data.personalInfo.portfolio) {
+            <span style="display:flex;align-items:center;gap:4px">{{ data.personalInfo.portfolio }} <span style="color:#C62A72">🌐</span></span>
+          }
         </div>
       </div>
 
@@ -67,6 +73,13 @@ import { ResumeData } from '../../../../core/models';
                   @if (exp.description) {
                     <p style="font-size:10px;margin:4px 0 0;color:#555;line-height:1.6">{{ exp.description }}</p>
                   }
+                  @if (exp.bullets && exp.bullets.length > 0) {
+                    <ul style="margin:4px 0 0;padding-left:14px">
+                      @for (bullet of exp.bullets; track bullet) {
+                        <li style="font-size:10px;color:#555;line-height:1.6">{{ bullet }}</li>
+                      }
+                    </ul>
+                  }
                 </div>
               }
             </div>
@@ -87,6 +100,9 @@ import { ResumeData } from '../../../../core/models';
                   <p style="font-size:10px;color:#777;font-style:italic;margin:1px 0">
                     {{ edu.startDate }}{{ edu.endDate ? ' – ' + edu.endDate : '' }} • {{ edu.institution }}
                   </p>
+                  @if (edu.description) {
+                    <p style="font-size:10px;color:#777;margin:2px 0 0;line-height:1.5">{{ edu.description }}</p>
+                  }
                 </div>
               }
             </div>

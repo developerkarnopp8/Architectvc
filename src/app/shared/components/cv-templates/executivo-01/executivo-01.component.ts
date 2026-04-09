@@ -41,6 +41,12 @@ import { ResumeData } from '../../../../core/models';
         @if (data.personalInfo.portfolio) {
           <span style="font-size:10px;display:flex;align-items:center;gap:5px">🌐 {{ data.personalInfo.portfolio }}</span>
         }
+        @if (data.personalInfo.linkedIn) {
+          <span style="font-size:10px;display:flex;align-items:center;gap:5px">🔗 {{ data.personalInfo.linkedIn }}</span>
+        }
+        @if (data.personalInfo.github) {
+          <span style="font-size:10px;display:flex;align-items:center;gap:5px">💻 {{ data.personalInfo.github }}</span>
+        }
       </div>
 
       <div style="padding:24px 44px;display:flex;flex-direction:column;gap:22px">
@@ -75,6 +81,13 @@ import { ResumeData } from '../../../../core/models';
                     </p>
                     @if (exp.description) {
                       <p style="font-size:10px;margin:6px 0 0;color:#555;line-height:1.6;font-style:italic">{{ exp.description }}</p>
+                    }
+                    @if (exp.bullets && exp.bullets.length > 0) {
+                      <ul style="margin:4px 0 0;padding-left:14px">
+                        @for (bullet of exp.bullets; track bullet) {
+                          <li style="font-size:10px;color:#555;line-height:1.6">{{ bullet }}</li>
+                        }
+                      </ul>
                     }
                   </div>
                 </div>

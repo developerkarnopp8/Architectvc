@@ -48,6 +48,21 @@ import { ResumeData } from '../../../../core/models';
               <span>📍</span><span>{{ data.personalInfo.city }}{{ data.personalInfo.state ? ', ' + data.personalInfo.state : '' }}</span>
             </div>
           }
+          @if (data.personalInfo.linkedIn) {
+            <div style="display:flex;gap:8px;align-items:center;font-size:10px;color:#ccc">
+              <span>🔗</span><span style="word-break:break-all">{{ data.personalInfo.linkedIn }}</span>
+            </div>
+          }
+          @if (data.personalInfo.github) {
+            <div style="display:flex;gap:8px;align-items:center;font-size:10px;color:#ccc">
+              <span>💻</span><span style="word-break:break-all">{{ data.personalInfo.github }}</span>
+            </div>
+          }
+          @if (data.personalInfo.portfolio) {
+            <div style="display:flex;gap:8px;align-items:center;font-size:10px;color:#ccc">
+              <span>🌐</span><span style="word-break:break-all">{{ data.personalInfo.portfolio }}</span>
+            </div>
+          }
         </div>
 
         <!-- Sobre -->
@@ -94,6 +109,9 @@ import { ResumeData } from '../../../../core/models';
                   <div>
                     <p style="font-size:11px;font-weight:700;margin:0;color:#fff">{{ edu.institution }}</p>
                     <p style="font-size:10px;margin:2px 0 0;color:#999">{{ edu.degree }}</p>
+                    @if (edu.description) {
+                      <p style="font-size:10px;margin:3px 0 0;color:#777;line-height:1.5;font-style:italic">{{ edu.description }}</p>
+                    }
                   </div>
                 </div>
               }
@@ -116,6 +134,13 @@ import { ResumeData } from '../../../../core/models';
                     <p style="font-size:10px;margin:2px 0;color:#ADFF2F;font-style:italic">{{ exp.jobTitle }}</p>
                     @if (exp.description) {
                       <p style="font-size:10px;margin:4px 0 0;color:#888;line-height:1.6">{{ exp.description }}</p>
+                    }
+                    @if (exp.bullets && exp.bullets.length > 0) {
+                      <ul style="margin:4px 0 0;padding-left:14px">
+                        @for (bullet of exp.bullets; track bullet) {
+                          <li style="font-size:10px;color:#888;line-height:1.6">{{ bullet }}</li>
+                        }
+                      </ul>
                     }
                   </div>
                 </div>

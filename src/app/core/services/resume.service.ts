@@ -93,7 +93,10 @@ export class ResumeService {
 
   setTemplate(id: string): void {
     this._templateId.set(id);
+    // Preserva o currentResumeId para não perder o vínculo com o CV já salvo
+    const resumeId = this.currentResumeId();
     this.reset();
+    this.currentResumeId.set(resumeId);
   }
 
   // === Personal Info ===
@@ -179,6 +182,13 @@ export class ResumeService {
     this._resumeData.update(d => ({
       ...d,
       skills: [...d.skills, skill],
+    }));
+  }
+
+  updateSkill(id: string, name: string): void {
+    this._resumeData.update(d => ({
+      ...d,
+      skills: d.skills.map(s => s.id === id ? { ...s, name } : s),
     }));
   }
 

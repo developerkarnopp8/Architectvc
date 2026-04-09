@@ -7,7 +7,7 @@ import { ResumeData } from '../../../../core/models';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div style="width:595px;min-height:842px;background:#fff;font-family:'Arial',sans-serif;box-sizing:border-box;color:#333;position:relative;overflow:hidden">
+    <div style="width:595px;min-height:842px;background:#fff;font-family:'Arial',sans-serif;box-sizing:border-box;color:#333;position:relative">
 
       <!-- Geometric accent top-right -->
       <div style="position:absolute;top:0;right:0;width:200px;height:200px;background:#E8E8E8;clip-path:polygon(100% 0, 0 0, 100% 100%);z-index:0"></div>
@@ -52,6 +52,9 @@ import { ResumeData } from '../../../../core/models';
                     <p style="font-size:11px;font-weight:700;margin:0">{{ edu.degree }}</p>
                     <p style="font-size:10px;color:#777;margin:1px 0">{{ edu.institution }}</p>
                     <p style="font-size:10px;color:#999;margin:0">{{ edu.startDate }}{{ edu.endDate ? ' – ' + edu.endDate : '' }}</p>
+                    @if (edu.description) {
+                      <p style="font-size:10px;color:#777;margin:2px 0 0;font-style:italic;line-height:1.5">{{ edu.description }}</p>
+                    }
                   </div>
                 }
               </div>
@@ -110,6 +113,21 @@ import { ResumeData } from '../../../../core/models';
                 <span style="color:#9E9E9E">📍</span><span>{{ data.personalInfo.city }}{{ data.personalInfo.state ? ', ' + data.personalInfo.state : '' }}</span>
               </div>
             }
+            @if (data.personalInfo.linkedIn) {
+              <div style="display:flex;gap:8px;align-items:center;font-size:10px">
+                <span style="color:#9E9E9E">🔗</span><span style="word-break:break-all">{{ data.personalInfo.linkedIn }}</span>
+              </div>
+            }
+            @if (data.personalInfo.github) {
+              <div style="display:flex;gap:8px;align-items:center;font-size:10px">
+                <span style="color:#9E9E9E">💻</span><span style="word-break:break-all">{{ data.personalInfo.github }}</span>
+              </div>
+            }
+            @if (data.personalInfo.portfolio) {
+              <div style="display:flex;gap:8px;align-items:center;font-size:10px">
+                <span style="color:#9E9E9E">🌐</span><span style="word-break:break-all">{{ data.personalInfo.portfolio }}</span>
+              </div>
+            }
           </div>
 
           <!-- Experiência -->
@@ -127,6 +145,13 @@ import { ResumeData } from '../../../../core/models';
                       <p style="font-size:10px;font-weight:600;color:#777;margin:1px 0">{{ exp.jobTitle }}</p>
                       @if (exp.description) {
                         <p style="font-size:10px;margin:3px 0 0;color:#777;line-height:1.5">{{ exp.description }}</p>
+                      }
+                      @if (exp.bullets && exp.bullets.length > 0) {
+                        <ul style="margin:4px 0 0;padding-left:14px">
+                          @for (bullet of exp.bullets; track bullet) {
+                            <li style="font-size:10px;color:#777;line-height:1.6">{{ bullet }}</li>
+                          }
+                        </ul>
                       }
                     </div>
                   </div>

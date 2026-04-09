@@ -31,6 +31,17 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'payment-success',
+    loadComponent: () =>
+      import('./features/payment-success/payment-success.component').then(m => m.PaymentSuccessComponent),
+  },
+  {
+    path: 'success',
+    loadComponent: () =>
+      import('./features/success/success.component').then(m => m.SuccessComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'success/:resumeId',
     loadComponent: () =>
       import('./features/success/success.component').then(m => m.SuccessComponent),

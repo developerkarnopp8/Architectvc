@@ -73,6 +73,36 @@
           <form [formGroup]="personalForm" class="space-y-6">
             <div class="grid grid-cols-2 gap-5">
 
+              <!-- Avatar upload (apenas templates com foto) -->
+              @if (templateHasAvatar()) {
+                <div class="col-span-2">
+                  <label class="field-label">Foto do Perfil</label>
+                  <div class="flex items-center gap-5">
+                    <div class="w-20 h-20 rounded-full bg-surface-container-highest flex-shrink-0 overflow-hidden flex items-center justify-center border-2 border-outline-variant/30">
+                      @if (personalInfo().avatarUrl) {
+                        <img [src]="personalInfo().avatarUrl" alt="Foto de perfil" class="w-full h-full object-cover" />
+                      } @else {
+                        <span class="material-symbols-outlined text-4xl text-outline">person</span>
+                      }
+                    </div>
+                    <div class="flex flex-col gap-2">
+                      <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-on-primary text-sm font-bold font-label hover:opacity-90 transition-opacity">
+                        <span class="material-symbols-outlined text-[18px]">upload</span>
+                        Enviar foto
+                        <input type="file" accept="image/*" class="hidden" (change)="onAvatarUpload($event)" />
+                      </label>
+                      @if (personalInfo().avatarUrl) {
+                        <button type="button" (click)="removeAvatar()"
+                          class="text-xs text-error font-semibold font-label hover:underline text-left">
+                          Remover foto
+                        </button>
+                      }
+                      <p class="text-xs text-secondary/60 font-body">JPG ou PNG, máx. 2MB</p>
+                    </div>
+                  </div>
+                </div>
+              }
+
               <div class="col-span-2">
                 <label class="field-label">Nome Completo *</label>
                 <input formControlName="fullName" type="text" placeholder="Ex: Gustavo Karnopp"
@@ -158,14 +188,14 @@
                     <div>
                       <label class="field-label">Início</label>
                       <input type="text" [value]="exp.startDate"
-                        (input)="updateExp(exp.id, 'startDate', $any($event.target).value)"
-                        placeholder="MM/AAAA" class="field-input" />
+                        (input)="onExpDateInput($event, exp.id, 'startDate')"
+                        placeholder="MM/AAAA" class="field-input" maxlength="7" />
                     </div>
                     <div>
                       <label class="field-label">Fim</label>
                       <input type="text" [value]="exp.endDate ?? ''"
-                        (input)="updateExp(exp.id, 'endDate', $any($event.target).value)"
-                        placeholder="Atual" class="field-input" />
+                        (input)="onExpDateInput($event, exp.id, 'endDate')"
+                        placeholder="Atual" class="field-input" maxlength="7" />
                     </div>
                   </div>
                   <div>
@@ -174,6 +204,30 @@
                       (input)="updateExp(exp.id, 'description', $any($event.target).value)"
                       placeholder="Descreva responsabilidades e conquistas..."
                       class="field-input resize-none"></textarea>
+                  </div>
+                  <!-- Bullets -->
+                  <div>
+                    <label class="field-label">Destaques (bullets)</label>
+                    <div class="space-y-2">
+                      @for (bullet of exp.bullets; track $index) {
+                        <div class="flex gap-2 items-center">
+                          <span class="text-primary font-bold text-sm flex-shrink-0">•</span>
+                          <input type="text" [value]="bullet"
+                            (input)="updateBullet(exp.id, $index, $any($event.target).value)"
+                            placeholder="Ex: Reduzi o tempo de build em 40%"
+                            class="field-input flex-1" />
+                          <button type="button" (click)="removeBullet(exp.id, $index)"
+                            class="text-on-surface-variant hover:text-error transition-colors flex-shrink-0 p-1">
+                            <span class="material-symbols-outlined text-[18px]">close</span>
+                          </button>
+                        </div>
+                      }
+                      <button type="button" (click)="addBullet(exp.id)"
+                        class="text-sm text-primary font-semibold font-label flex items-center gap-1 hover:underline">
+                        <span class="material-symbols-outlined text-[16px]">add</span>
+                        Adicionar destaque
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -221,14 +275,21 @@
                   <div>
                     <label class="field-label">Início</label>
                     <input type="text" [value]="edu.startDate"
-                      (input)="updateEdu(edu.id, 'startDate', $any($event.target).value)"
-                      placeholder="MM/AAAA" class="field-input" />
+                      (input)="onEduDateInput($event, edu.id, 'startDate')"
+                      placeholder="MM/AAAA" class="field-input" maxlength="7" />
                   </div>
                   <div>
                     <label class="field-label">Fim</label>
                     <input type="text" [value]="edu.endDate ?? ''"
-                      (input)="updateEdu(edu.id, 'endDate', $any($event.target).value)"
-                      placeholder="Em andamento" class="field-input" />
+                      (input)="onEduDateInput($event, edu.id, 'endDate')"
+                      placeholder="Em andamento" class="field-input" maxlength="7" />
+                  </div>
+                  <div class="col-span-2">
+                    <label class="field-label">Descrição (opcional)</label>
+                    <textarea rows="2" [value]="edu.description ?? ''"
+                      (input)="updateEdu(edu.id, 'description', $any($event.target).value)"
+                      placeholder="Ex: TCC sobre Inteligência Artificial aplicada..."
+                      class="field-input resize-none"></textarea>
                   </div>
                 </div>
               </div>
@@ -259,15 +320,18 @@
             <p class="text-xs text-secondary font-body -mt-3">Pressione Enter ou clique em Add para incluir.</p>
 
             @if (skills().length > 0) {
-              <div class="flex flex-wrap gap-2">
+              <div class="space-y-2">
                 @for (skill of skills(); track skill.id) {
-                  <span class="flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-semibold font-label">
-                    {{ skill.name }}
-                    <button (click)="resumeService.removeSkill(skill.id)"
-                      class="hover:text-error transition-colors ml-0.5">
-                      <span class="material-symbols-outlined text-[14px]">close</span>
+                  <div class="flex items-center gap-2">
+                    <input type="text" [value]="skill.name"
+                      (input)="resumeService.updateSkill(skill.id, $any($event.target).value)"
+                      placeholder="Ex: Angular, TypeScript..."
+                      class="field-input flex-1 text-sm" />
+                    <button type="button" (click)="resumeService.removeSkill(skill.id)"
+                      class="text-on-surface-variant hover:text-error transition-colors flex-shrink-0 p-1">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
                     </button>
-                  </span>
+                  </div>
                 }
               </div>
             } @else {
