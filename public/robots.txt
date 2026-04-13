@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /templates
+Allow: /auth/register
+
+Disallow: /editor
+Disallow: /editor/
+Disallow: /dashboard
+Disallow: /success
+Disallow: /success/
+Disallow: /payment-success
+
+Sitemap: https://architectvc.aevon.online/sitemap.xml
