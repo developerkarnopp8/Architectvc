@@ -12,6 +12,7 @@ export const PENDING_DOWNLOAD_RESUME_KEY = 'architect_cv_pending_download_resume
   standalone: true,
   imports: [CommonModule],
   templateUrl: './pricing-modal.component.html',
+  styleUrl: './pricing-modal.component.scss',
 })
 export class PricingModalComponent implements OnInit {
   closed = output<void>();
