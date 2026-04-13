@@ -160,7 +160,7 @@
 
 <!-- ===== Pricing Modal ===== -->
 @if (showPricing()) {
-  <app-pricing-modal (closed)="showPricing.set(false)" />
+  <app-pricing-modal [templateId]="templateId()" (closed)="showPricing.set(false)" />
 }
 
 <!-- ===== Print target (only visible when printing) ===== -->

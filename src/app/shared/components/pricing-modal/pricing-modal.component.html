@@ -41,6 +41,18 @@
       </div>
     }
 
+    <!-- Alert: single plan needs a template context -->
+    @if (showSingleAlert()) {
+      <div class="mb-6 bg-tertiary/10 border border-tertiary/30 rounded-2xl p-4 text-center">
+        <span class="material-symbols-outlined text-3xl text-tertiary mb-2 block">info</span>
+        <p class="text-on-surface font-body text-sm font-medium mb-1">Para comprar um template avulso, acesse a página de Templates e selecione o modelo desejado.</p>
+        <button (click)="showSingleAlert.set(false); closed.emit(); goToTemplates()"
+                class="mt-3 px-5 py-2 bg-tertiary text-on-tertiary rounded-xl text-sm font-label font-semibold hover:opacity-90 transition-opacity">
+          Ver Templates
+        </button>
+      </div>
+    }
+
     <!-- Plans -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4" [class.opacity-30]="showLoginPrompt()" [class.pointer-events-none]="showLoginPrompt()">
       @for (plan of plans(); track plan.id) {
