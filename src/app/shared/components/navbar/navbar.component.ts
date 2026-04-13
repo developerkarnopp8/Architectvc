@@ -2,6 +2,7 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,9 +12,11 @@ import { AuthService } from '../../../core/auth/auth.service';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  private auth = inject(AuthService);
+  private auth  = inject(AuthService);
+  private toast = inject(ToastService);
 
   menuOpen   = signal(false);
+  logoError  = signal(false);
   isLoggedIn  = this.auth.isLoggedIn;
   user        = this.auth.user;
   firstName   = computed(() => this.auth.user()?.name?.split(' ')[0] ?? '');
@@ -23,6 +26,7 @@ export class NavbarComponent {
 
   logout(): void {
     this.closeMenu();
+    this.toast.info('Sessão encerrada', 'Até logo! Faça login para continuar.');
     this.auth.logout();
   }
 }

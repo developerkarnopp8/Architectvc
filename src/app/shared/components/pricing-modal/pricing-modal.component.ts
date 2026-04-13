@@ -12,6 +12,7 @@ export const PENDING_DOWNLOAD_RESUME_KEY = 'architect_cv_pending_download_resume
   standalone: true,
   imports: [CommonModule],
   templateUrl: './pricing-modal.component.html',
+  styleUrl: './pricing-modal.component.scss',
 })
 export class PricingModalComponent implements OnInit {
   closed = output<void>();
@@ -24,9 +25,10 @@ export class PricingModalComponent implements OnInit {
   private resumeService  = inject(ResumeService);
   private router         = inject(Router);
 
-  plans           = signal<Plan[]>([]);
-  loading         = signal<PlanId | null>(null);
-  showLoginPrompt = signal(false);
+  plans            = signal<Plan[]>([]);
+  loading          = signal<PlanId | null>(null);
+  showLoginPrompt  = signal(false);
+  showSingleAlert  = signal(false);
 
   ngOnInit() {
     this.paymentService.getPlans().subscribe(p => this.plans.set(p));
@@ -38,6 +40,13 @@ export class PricingModalComponent implements OnInit {
       return;
     }
 
+    // Plano único sem template selecionado — redireciona para a página de templates
+    if (plan.id === 'single' && !this.templateId()) {
+      this.showSingleAlert.set(true);
+      return;
+    }
+
+    this.showSingleAlert.set(false);
     this.loading.set(plan.id);
     const tid = plan.id === 'single' ? (this.templateId() ?? undefined) : undefined;
 
@@ -56,6 +65,10 @@ export class PricingModalComponent implements OnInit {
         this.loading.set(null);
       },
     });
+  }
+
+  goToTemplates() {
+    this.router.navigate(['/templates']);
   }
 
   goToLogin() {

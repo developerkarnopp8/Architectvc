@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +17,9 @@ import { AuthService } from '../../../core/auth/auth.service';
         <h1 class="font-headline text-4xl font-extrabold text-primary mb-2">Bem-vindo de volta</h1>
         <p class="text-secondary font-body">Entre na sua conta para continuar.</p>
       </div>
-      <div class="bg-white p-8 rounded-2xl shadow-editorial space-y-6">
+      <div class="bg-surface-container p-8 rounded-2xl shadow-editorial border border-outline-variant/20 space-y-6">
         @if (error()) {
-          <div class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 font-body">
+          <div class="bg-error/10 border border-error/30 text-error text-sm rounded-xl px-4 py-3 font-body">
             {{ error() }}
           </div>
         }
@@ -34,7 +35,7 @@ import { AuthService } from '../../../core/auth/auth.service';
             class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white outline-none transition-all" />
         </div>
         <button (click)="submit()" [disabled]="loading()"
-          class="w-full hero-gradient text-white py-4 rounded-xl font-bold font-label shadow-lg hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+          class="w-full hero-gradient text-on-primary py-4 rounded-xl font-bold font-label shadow-lg hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
           {{ loading() ? 'Entrando...' : 'Entrar' }}
         </button>
         <p class="text-center text-sm text-secondary font-body">
@@ -51,6 +52,7 @@ export class LoginComponent {
   private auth   = inject(AuthService);
   private router = inject(Router);
   private route  = inject(ActivatedRoute);
+  private toast  = inject(ToastService);
 
   email    = '';
   password = '';
@@ -67,6 +69,7 @@ export class LoginComponent {
 
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
+        this.toast.success('Login realizado!', 'Bem-vindo de volta.');
         const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
         if (this.auth.hasPendingResume()) {
           this.router.navigate(['/editor']);
@@ -77,6 +80,7 @@ export class LoginComponent {
         }
       },
       error: (err) => {
+        this.toast.error('Erro ao entrar', err?.error?.message ?? 'Verifique suas credenciais.');
         this.error.set(err?.error?.message ?? 'Erro ao entrar. Tente novamente.');
         this.loading.set(false);
       },
