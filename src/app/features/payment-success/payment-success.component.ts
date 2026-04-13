@@ -5,6 +5,7 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { PENDING_DOWNLOAD_RESUME_KEY } from '../../shared/components/pricing-modal/pricing-modal.component';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-payment-success',
@@ -40,6 +41,7 @@ export class PaymentSuccessComponent implements OnInit {
   private api            = inject(ApiService);
   private authService    = inject(AuthService);
   private paymentService = inject(PaymentService);
+  private toast          = inject(ToastService);
 
   status         = signal<'loading' | 'success' | 'error'>('loading');
   successMessage = signal('Redirecionando para o seu currículo...');
@@ -74,9 +76,11 @@ export class PaymentSuccessComponent implements OnInit {
 
           if (res.plan === 'single' && pendingResumeId) {
             this.successMessage.set('Seu currículo está pronto para baixar. Redirecionando...');
+            this.toast.success('Pagamento confirmado!', 'Template desbloqueado. Baixe seu currículo agora.');
             setTimeout(() => this.router.navigate(['/success', pendingResumeId]), 2000);
           } else {
             this.successMessage.set('Plano ativado com sucesso! Redirecionando...');
+            this.toast.success('Plano ativado!', 'Bem-vindo ao Architect Pro. Todos os templates estão liberados.');
             setTimeout(() => this.router.navigate(['/dashboard']), 2000);
           }
         } else {

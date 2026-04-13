@@ -1,5 +1,5 @@
 <!-- ===== TOP BAR ===== -->
-<header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-sm h-16 px-6 md:px-12 flex justify-between items-center">
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 h-16 px-6 md:px-12 flex justify-between items-center">
   <div class="flex items-center gap-8">
     <a routerLink="/" class="text-xl font-extrabold tracking-tighter text-primary font-headline uppercase">
       Architect CV
@@ -17,7 +17,7 @@
         <span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span> Salvando...
       </span>
     } @else if (saveStatus() === 'saved') {
-      <span class="hidden md:flex items-center gap-1 text-xs text-green-600 font-label">
+      <span class="hidden md:flex items-center gap-1 text-xs text-primary font-label">
         <span class="material-symbols-outlined text-[16px]">check_circle</span> Salvo
       </span>
     } @else if (saveStatus() === 'error') {
@@ -428,7 +428,7 @@
 
   <!-- ==================== RIGHT PANEL: Live Preview ==================== -->
   <section class="hidden md:flex flex-1 h-full relative flex-col overflow-hidden"
-    style="background-image: radial-gradient(#d8dadc 0.5px, transparent 0.5px), radial-gradient(#d8dadc 0.5px, #f7f9fb 0.5px); background-size:20px 20px;">
+    style="background-image: radial-gradient(rgba(201,168,76,0.15) 0.5px, transparent 0.5px), radial-gradient(rgba(201,168,76,0.15) 0.5px, #1A1A2E 0.5px); background-size:20px 20px;">
 
     <!-- Zoom controls -->
     <div class="absolute bottom-8 right-8 z-10 flex flex-col gap-2 p-2 rounded-2xl glass-card shadow-2xl border border-white/20">
@@ -448,7 +448,7 @@
     <!-- Template badge -->
     <div class="absolute top-4 left-4 z-10">
       <button (click)="changeTemplate()"
-        class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/80 backdrop-blur text-xs font-semibold font-label text-on-surface-variant shadow hover:bg-white transition-all border border-outline-variant/20">
+        class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container/80 backdrop-blur text-xs font-semibold font-label text-on-surface shadow hover:bg-surface-container-high transition-all border border-outline-variant/20">
         <span class="material-symbols-outlined text-[14px]">dashboard_customize</span>
         Mudar Template
       </button>

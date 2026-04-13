@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><rect width="512" height="512" rx="40.96" fill="#1A1A2E"/><line x1="256.0" y1="114.23999999999998" x2="157.44" y2="325.44" stroke="#C9A84C" stroke-width="17.92" stroke-linecap="round"/><line x1="256.0" y1="114.23999999999998" x2="354.56" y2="325.44" stroke="#C9A84C" stroke-width="17.92" stroke-linecap="round"/><line x1="212.6336" y1="262.08" x2="299.3664" y2="262.08" stroke="#C9A84C" stroke-width="12.544" stroke-linecap="round"/><line x1="243.4336" y1="293.76" x2="268.5664" y2="293.76" stroke="#E8E0D0" stroke-width="4.096" stroke-opacity="0.25"/><line x1="222.4896" y1="240.95999999999998" x2="289.5104" y2="240.95999999999998" stroke="#E8E0D0" stroke-width="4.096" stroke-opacity="0.25"/><line x1="201.54559999999998" y1="188.15999999999997" x2="310.4544" y2="188.15999999999997" stroke="#E8E0D0" stroke-width="4.096" stroke-opacity="0.25"/><circle cx="256.0" cy="114.23999999999998" r="12.544" fill="#C9A84C"/><circle cx="157.44" cy="325.44" r="8.7808" fill="#C9A84C" opacity="0.7"/><circle cx="354.56" cy="325.44" r="8.7808" fill="#C9A84C" opacity="0.7"/><text x="256.0" y="397.12" 
+            text-anchor="middle" 
+            font-family="Georgia, 'Times New Roman', serif" 
+            font-size="58.88" 
+            font-weight="700"
+            letter-spacing="4.096"
+            fill="#E8E0D0">ARCHITECT<tspan fill="#C9A84C">VC</tspan></text><text x="256.0" y="461.88800000000003" 
+            text-anchor="middle" 
+            font-family="Georgia, 'Times New Roman', serif" 
+            font-size="28.16" 
+            letter-spacing="7.68"
+            fill="#E8E0D0"
+            opacity="0.55">PORTFOLIO · CURRICULUM</text></svg>
