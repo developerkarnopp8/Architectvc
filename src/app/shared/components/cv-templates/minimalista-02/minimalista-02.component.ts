@@ -101,7 +101,7 @@ import { ResumeData } from '../../../../core/models';
                 @for (edu of data.education; track edu.id) {
                   <div>
                     <p style="font-size:10.5px;margin:0">{{ edu.degree }}</p>
-                    <div style="display:flex;gap:8px;margin-top:1px">
+                    <div class="cv-item" style="display:flex;gap:8px;margin-top:1px">
                       <span style="font-size:10px;font-weight:700;color:#555">{{ edu.startDate }}{{ edu.endDate ? ' – ' + edu.endDate : '' }}</span>
                       <span style="font-size:10px;color:#777">• {{ edu.institution }}</span>
                     </div>
@@ -121,7 +121,7 @@ import { ResumeData } from '../../../../core/models';
                 @for (exp of data.experiences; track exp.id) {
                   <div>
                     <p style="font-size:10.5px;margin:0">{{ exp.company }}</p>
-                    <div style="display:flex;gap:8px;margin-top:1px">
+                    <div class="cv-item" style="display:flex;gap:8px;margin-top:1px">
                       <span style="font-size:10px;font-weight:700;color:#555">{{ exp.startDate }}{{ exp.endDate ? ' – ' + exp.endDate : ' – Atual' }}</span>
                       <span style="font-size:10px;color:#777">• {{ exp.jobTitle }}</span>
                     </div>

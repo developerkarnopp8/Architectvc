@@ -102,7 +102,7 @@ import { ResumeData } from '../../../../core/models';
             <p style="font-size:12px;letter-spacing:3px;color:#ADFF2F;font-weight:700;text-transform:uppercase;margin:0 0 14px">QUALIFICAÇÕES</p>
             <div style="display:flex;flex-direction:column;gap:12px">
               @for (edu of data.education; track edu.id) {
-                <div style="display:flex;gap:14px">
+                <div class="cv-item" style="display:flex;gap:14px">
                   <span style="font-size:10px;color:#888;min-width:70px;padding-top:1px;flex-shrink:0;line-height:1.4">
                     {{ edu.startDate }}{{ edu.endDate ? ' - ' + edu.endDate : '' }}
                   </span>
@@ -125,7 +125,7 @@ import { ResumeData } from '../../../../core/models';
             <p style="font-size:12px;letter-spacing:3px;color:#ADFF2F;font-weight:700;text-transform:uppercase;margin:0 0 14px">EXPERIÊNCIA</p>
             <div style="display:flex;flex-direction:column;gap:14px">
               @for (exp of data.experiences; track exp.id) {
-                <div style="display:flex;gap:14px">
+                <div class="cv-item" style="display:flex;gap:14px">
                   <span style="font-size:10px;color:#888;min-width:70px;padding-top:1px;flex-shrink:0;line-height:1.4">
                     {{ exp.startDate }}{{ exp.endDate ? ' - ' + exp.endDate : ' - Atual' }}
                   </span>

@@ -84,6 +84,7 @@ export class EditorComponent implements OnInit {
   get currentSectionIndex(): number { return this.sections.findIndex(s => s.id === this.activeSection); }
   get isLastSection(): boolean { return this.currentSectionIndex === this.sections.length - 1; }
   get isFirstSection(): boolean { return this.currentSectionIndex === 0; }
+  get canDownload(): boolean { return this.personalForm?.valid ?? false; }
 
   // === Formulários ===
   personalForm!: FormGroup;

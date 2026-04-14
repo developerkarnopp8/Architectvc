@@ -47,7 +47,7 @@ import { ResumeData } from '../../../../core/models';
 
         <!-- Sobre Mim -->
         @if (data.personalInfo.about) {
-          <div style="margin-bottom:20px">
+          <div class="cv-section" style="margin-bottom:20px">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
               <div style="width:12px;height:12px;border-radius:50%;background:#C62A72;flex-shrink:0"></div>
               <h2 style="font-size:14px;font-weight:700;color:#C62A72;text-transform:uppercase;letter-spacing:1px;margin:0">SOBRE MIM</h2>
@@ -58,7 +58,7 @@ import { ResumeData } from '../../../../core/models';
 
         <!-- Experiência -->
         @if (data.experiences.length > 0) {
-          <div style="margin-bottom:20px">
+          <div class="cv-section" style="margin-bottom:20px">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
               <div style="width:12px;height:12px;border-radius:50%;background:#C62A72;flex-shrink:0"></div>
               <h2 style="font-size:14px;font-weight:700;color:#C62A72;text-transform:uppercase;letter-spacing:1px;margin:0">EXPERIÊNCIA</h2>
@@ -88,7 +88,7 @@ import { ResumeData } from '../../../../core/models';
 
         <!-- Educação -->
         @if (data.education.length > 0) {
-          <div style="margin-bottom:20px">
+          <div class="cv-section" style="margin-bottom:20px">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
               <div style="width:12px;height:12px;border-radius:50%;background:#C62A72;flex-shrink:0"></div>
               <h2 style="font-size:14px;font-weight:700;color:#C62A72;text-transform:uppercase;letter-spacing:1px;margin:0">EDUCAÇÃO</h2>

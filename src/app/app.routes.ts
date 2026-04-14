@@ -63,6 +63,11 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'privacidade',
+    loadComponent: () =>
+      import('./features/privacidade/privacidade.component').then(m => m.PrivacidadeComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
