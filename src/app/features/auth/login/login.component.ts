@@ -44,10 +44,15 @@ import { ToastService } from '../../../core/services/toast.service';
           class="w-full hero-gradient text-on-primary py-4 rounded-xl font-bold font-label shadow-lg hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
           {{ loading() ? 'Entrando...' : 'Entrar' }}
         </button>
-        <p class="text-center text-sm text-secondary font-body">
-          Não tem conta?
-          <a routerLink="/auth/register" class="text-primary font-bold hover:underline">Criar agora</a>
-        </p>
+        <div class="flex flex-col items-center gap-2">
+          <a routerLink="/auth/forgot-password" class="text-sm text-secondary hover:text-primary transition-colors font-body">
+            Esqueceu sua senha?
+          </a>
+          <p class="text-center text-sm text-secondary font-body">
+            Não tem conta?
+            <a routerLink="/auth/register" class="text-primary font-bold hover:underline">Criar agora</a>
+          </p>
+        </div>
       </div>
     </main>
     <app-footer />
