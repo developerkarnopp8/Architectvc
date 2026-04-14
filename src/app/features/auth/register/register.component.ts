@@ -6,6 +6,8 @@ import { FooterComponent } from '../../../shared/components/footer/footer.compon
 import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 
+const INPUT_CLASS = 'w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 outline-none transition-all text-white placeholder:text-white/40';
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -26,18 +28,24 @@ import { ToastService } from '../../../core/services/toast.service';
         <div>
           <label class="block text-xs font-bold text-secondary mb-2 font-label uppercase tracking-wider">Nome Completo</label>
           <input type="text" placeholder="Seu nome" [(ngModel)]="name"
-            class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white outline-none transition-all" />
+            class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 outline-none transition-all text-white placeholder:text-white/40" />
         </div>
         <div>
           <label class="block text-xs font-bold text-secondary mb-2 font-label uppercase tracking-wider">E-mail</label>
           <input type="email" placeholder="voce@email.com" [(ngModel)]="email"
-            class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white outline-none transition-all" />
+            class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 outline-none transition-all text-white placeholder:text-white/40" />
         </div>
         <div>
           <label class="block text-xs font-bold text-secondary mb-2 font-label uppercase tracking-wider">Senha</label>
-          <input type="password" placeholder="••••••••" [(ngModel)]="password"
-            (keydown.enter)="submit()"
-            class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white outline-none transition-all" />
+          <div class="relative">
+            <input [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••" [(ngModel)]="password"
+              (keydown.enter)="submit()"
+              class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-primary/40 outline-none transition-all text-white placeholder:text-white/40" />
+            <button type="button" (click)="showPassword.set(!showPassword())"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors">
+              <span class="material-symbols-outlined text-[20px]">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
         </div>
         <button (click)="submit()" [disabled]="loading()"
           class="w-full hero-gradient text-on-primary py-4 rounded-xl font-bold font-label shadow-lg hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
@@ -59,11 +67,12 @@ export class RegisterComponent {
   private route  = inject(ActivatedRoute);
   private toast  = inject(ToastService);
 
-  name     = '';
-  email    = '';
-  password = '';
-  loading  = signal(false);
-  error    = signal('');
+  name         = '';
+  email        = '';
+  password     = '';
+  loading      = signal(false);
+  error        = signal('');
+  showPassword = signal(false);
 
   submit(): void {
     if (!this.name || !this.email || !this.password) {

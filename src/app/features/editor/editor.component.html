@@ -30,11 +30,19 @@
       <span class="material-symbols-outlined text-[20px]">dashboard_customize</span>
       Mudar Template
     </button>
-    <a routerLink="/success/preview"
-       class="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold bg-tertiary text-on-tertiary shadow-lg hover:scale-105 active:scale-95 transition-all font-label">
-      <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1;">download</span>
-      Baixar PDF
-    </a>
+    @if (canDownload) {
+      <a routerLink="/success/preview"
+         class="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold bg-tertiary text-on-tertiary shadow-lg hover:scale-105 active:scale-95 transition-all font-label">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1;">download</span>
+        Baixar PDF
+      </a>
+    } @else {
+      <div title="Preencha todos os campos obrigatórios"
+           class="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold bg-surface-container-high text-secondary cursor-not-allowed opacity-50 font-label select-none">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1;">download</span>
+        Baixar PDF
+      </div>
+    }
   </div>
   <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-outline-variant opacity-20"></div>
 </header>
@@ -105,7 +113,7 @@
 
               <div class="col-span-2">
                 <label class="field-label">Nome Completo *</label>
-                <input formControlName="fullName" type="text" placeholder="Ex: Gustavo Karnopp"
+                <input formControlName="fullName" type="text" placeholder="Ex: João Silva"
                   class="field-input" [class.ring-2]="personalForm.get('fullName')?.invalid && personalForm.get('fullName')?.touched"
                   [class.ring-error]="personalForm.get('fullName')?.invalid && personalForm.get('fullName')?.touched" />
               </div>

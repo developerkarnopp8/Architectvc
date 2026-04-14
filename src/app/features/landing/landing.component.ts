@@ -21,21 +21,21 @@ export class LandingComponent {
       icon: 'dashboard',
       title: 'Escolha um Template',
       description: 'Navegue por nossa galeria curada e encontre o estilo que mais combina com seu perfil profissional.',
-      colorClass: 'bg-primary-container text-on-primary'
+      colorClass: 'bg-primary/20 text-primary'
     },
     {
       number: '2',
       icon: 'edit_note',
       title: 'Preencha seus Dados',
       description: 'Nossa interface intuitiva guia você através de cada seção, sugerindo as melhores palavras-chave.',
-      colorClass: 'bg-tertiary-fixed text-tertiary'
+      colorClass: 'bg-primary text-on-primary'
     },
     {
       number: '3',
       icon: 'download',
       title: 'Baixe em PDF',
       description: 'Exporte seu currículo pronto para impressão e totalmente otimizado para sistemas de leitura digital.',
-      colorClass: 'bg-primary-fixed text-primary'
+      colorClass: 'bg-primary/20 text-primary'
     },
   ];
 
