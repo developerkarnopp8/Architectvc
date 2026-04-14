@@ -90,24 +90,24 @@ import { ResumeData } from '../../../../core/models';
             <h2 style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin:0 0 10px;font-family:'Arial',sans-serif">CONTATO</h2>
             <div style="display:flex;flex-direction:column;gap:6px;font-size:10px;color:#555;font-family:'Arial',sans-serif">
               @if (data.personalInfo.email) {
-                <div style="display:flex;gap:5px;align-items:flex-start">
+                <div class="cv-item" style="display:flex;gap:5px;align-items:flex-start">
                   <span style="flex-shrink:0">✉</span><span style="word-break:break-all">{{ data.personalInfo.email }}</span>
                 </div>
               }
               @if (data.personalInfo.phone) {
-                <div style="display:flex;gap:5px"><span>📞</span>{{ data.personalInfo.phone }}</div>
+                <div class="cv-item" style="display:flex;gap:5px"><span>📞</span>{{ data.personalInfo.phone }}</div>
               }
               @if (data.personalInfo.city) {
-                <div style="display:flex;gap:5px"><span>📍</span>{{ data.personalInfo.city }}{{ data.personalInfo.state ? ', ' + data.personalInfo.state : '' }}</div>
+                <div class="cv-item" style="display:flex;gap:5px"><span>📍</span>{{ data.personalInfo.city }}{{ data.personalInfo.state ? ', ' + data.personalInfo.state : '' }}</div>
               }
               @if (data.personalInfo.linkedIn) {
-                <div style="display:flex;gap:5px"><span>🔗</span><span style="word-break:break-all">{{ data.personalInfo.linkedIn }}</span></div>
+                <div class="cv-item" style="display:flex;gap:5px"><span>🔗</span><span style="word-break:break-all">{{ data.personalInfo.linkedIn }}</span></div>
               }
               @if (data.personalInfo.github) {
-                <div style="display:flex;gap:5px"><span>💻</span><span style="word-break:break-all">{{ data.personalInfo.github }}</span></div>
+                <div class="cv-item" style="display:flex;gap:5px"><span>💻</span><span style="word-break:break-all">{{ data.personalInfo.github }}</span></div>
               }
               @if (data.personalInfo.portfolio) {
-                <div style="display:flex;gap:5px"><span>🌐</span><span style="word-break:break-all">{{ data.personalInfo.portfolio }}</span></div>
+                <div class="cv-item" style="display:flex;gap:5px"><span>🌐</span><span style="word-break:break-all">{{ data.personalInfo.portfolio }}</span></div>
               }
             </div>
           </div>

@@ -30,10 +30,8 @@
         </p>
       </div>
 
-      <!-- Glass preview card -->
-      <!-- CvPreviewComponent renders at 595x842px scaled by [scale] input -->
-      <!-- scale=0.6 → visual 357×505px, contained in the card -->
-      <div class="glass-card rounded-xl p-4 md:p-8 shadow-2xl relative group cursor-pointer"
+      <!-- Glass preview card — thumbnail 60% scale, primeira página -->
+      <div class="glass-card rounded-xl p-4 md:p-6 shadow-2xl relative group cursor-pointer"
            (click)="openPreview()">
         <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50 pointer-events-none rounded-xl"></div>
         <div class="relative bg-white shadow-card mx-auto rounded-sm overflow-hidden border border-outline-variant/10"
@@ -46,7 +44,7 @@
         </div>
 
         <!-- Hover overlay -->
-        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center pointer-events-none rounded-xl">
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center pointer-events-none rounded-xl">
           <div class="bg-surface-container/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-xl transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all flex items-center gap-2 font-label">
             <span class="material-symbols-outlined text-primary">zoom_in</span>
             <span class="font-semibold text-on-surface">Ampliar Visualização</span>
@@ -137,22 +135,26 @@
 
 <!-- ===== Ampliar Visualização Modal ===== -->
 @if (showPreviewModal()) {
-  <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 no-print"
-       (click)="closePreview()">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
-    <div class="relative z-10 flex flex-col items-center gap-4 max-h-[95vh]"
+  <div class="fixed inset-0 z-[60] no-print" (click)="closePreview()">
+    <div class="absolute inset-0 bg-black/75 backdrop-blur-sm"></div>
+
+    <!-- Botão fechar fixo -->
+    <button type="button" (click)="closePreview()"
+      class="absolute top-4 right-4 z-20 bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+
+    <!-- Container scrollável centralizado -->
+    <div class="absolute inset-0 overflow-y-auto flex justify-center py-8 px-4"
          (click)="$event.stopPropagation()">
-      <button (click)="closePreview()"
-        class="self-end bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-      <div class="bg-white rounded-sm shadow-2xl overflow-auto"
-           style="width:595px;max-height:calc(95vh - 64px);">
-        <app-cv-preview
-          [data]="resumeData()"
-          [templateId]="templateId()"
-          [scale]="1"
-        />
+      <div class="relative z-10 w-[595px] max-w-full">
+        <div class="bg-white shadow-2xl rounded-sm">
+          <app-cv-preview
+            [data]="resumeData()"
+            [templateId]="templateId()"
+            [forPrint]="true"
+          />
+        </div>
       </div>
     </div>
   </div>

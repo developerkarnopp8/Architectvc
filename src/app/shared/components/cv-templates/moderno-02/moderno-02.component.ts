@@ -99,7 +99,7 @@ import { ResumeData } from '../../../../core/models';
           <!-- Contact -->
           <div style="background:#F8F8F8;border-radius:8px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
             @if (data.personalInfo.phone) {
-              <div style="display:flex;gap:8px;align-items:center;font-size:10px">
+              <div class="cv-item" style="display:flex;gap:8px;align-items:center;font-size:10px">
                 <span style="color:#9E9E9E">📞</span><span>{{ data.personalInfo.phone }}</span>
               </div>
             }
@@ -137,7 +137,7 @@ import { ResumeData } from '../../../../core/models';
               <div style="display:flex;flex-direction:column;gap:12px;position:relative">
                 <div style="position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:#E0E0E0"></div>
                 @for (exp of data.experiences; track exp.id) {
-                  <div style="display:flex;gap:14px;align-items:flex-start">
+                  <div class="cv-item" style="display:flex;gap:14px;align-items:flex-start">
                     <div style="width:11px;height:11px;border-radius:50%;border:2px solid #9E9E9E;background:#fff;flex-shrink:0;margin-top:2px"></div>
                     <div>
                       <p style="font-size:10px;color:#999;margin:0 0 1px">{{ exp.startDate }}{{ exp.endDate ? ' – ' + exp.endDate : ' – Atual' }}</p>

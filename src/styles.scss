@@ -101,7 +101,6 @@ html, body {
 
 // === Print: show only CV ===
 @media print {
-  // Force background colors, gradients and images to print
   *,
   *::before,
   *::after {
@@ -109,19 +108,29 @@ html, body {
     print-color-adjust: exact !important;
   }
 
-  .no-print { display: none !important; }
-
-  // Scale 595px template to fill A4 (794px at 96dpi = 210mm)
-  // zoom affects layout flow, so multi-page breaks work correctly
   html {
+    background: white !important;
+    height: auto !important;
     zoom: 1.3340 !important;
   }
 
   body {
+    background: white !important;
+    height: auto !important;
+    min-height: 0 !important;
     width: 595px !important;
     margin: 0 !important;
     padding: 0 !important;
+    color: #111 !important;
+  }
+
+  app-root {
     background: white !important;
+    display: block !important;
+  }
+
+  .no-print {
+    display: none !important;
   }
 
   .print-only {
@@ -130,9 +139,19 @@ html, body {
     margin: 0 !important;
     padding: 0 !important;
     overflow: visible !important;
+    background: white !important;
   }
 
-  // Avoid breaking paragraphs and list items mid-page
+  .cv-section {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .cv-item {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
   p, li {
     orphans: 3;
     widows: 3;
@@ -140,11 +159,11 @@ html, body {
 
   @page {
     size: A4;
-    margin: 12mm 0;
+    margin: 14mm 0;
   }
 
   @page :first {
-    margin: 0;
+    margin-top: 0;
   }
 }
 
